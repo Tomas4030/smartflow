@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Municipality {
+  id        String   @id @default(uuid())
+  name      String
+  district  String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  users         User[]
+  intersections Intersection[]
+
+  @@map("municipalities")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  municipalityId String   @map("municipality_id")
+  name           String
+  email          String   @unique
+  passwordHash   String   @map("password_hash")
+  role           String   @default("operator") // operator | admin
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  municipality Municipality @relation(fields: [municipalityId], references: [id])
+
+  @@map("users")
+}
+
+model Intersection {
+  id             String   @id @default(uuid())
+  municipalityId String   @map("municipality_id")
+  name           String
+  address        String
+  lat            Decimal
+  lng            Decimal
+  status         String   @default("idle") // idle | priority | offline
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  municipality     Municipality      @relation(fields: [municipalityId], references: [id])
+  detectionEvents  DetectionEvent[]
+
+  @@map("intersections")
+}
+
+model DetectionEvent {
+  id             String    @id @default(uuid())
+  intersectionId String    @map("intersection_id")
+  triggeredBy    String    @map("triggered_by") // camera | manual
+  greenDurationS Int       @map("green_duration_s")
+  detectedAt     DateTime  @default(now()) @map("detected_at")
+  resolvedAt     DateTime? @map("resolved_at")
+
+  intersection Intersection @relation(fields: [intersectionId], references: [id])
+
+  @@map("detection_events")
+}
