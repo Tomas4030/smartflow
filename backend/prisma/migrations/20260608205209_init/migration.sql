@@ -49,6 +49,9 @@ CREATE TABLE "detection_events" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "municipalities_name_key" ON "municipalities"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- AddForeignKey
