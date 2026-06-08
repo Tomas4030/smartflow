@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
+const intersectionRoutes = require("./routes/intersections");
 const authRoutes = require("./routes/auth");
 const municipalityRoutes = require("./routes/municipalities");
 
@@ -27,6 +28,7 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/municipalities", municipalityRoutes);
+app.use("/api/intersections", intersectionRoutes);
 
 app.use((req, res) => {
   res.status(404).json({
