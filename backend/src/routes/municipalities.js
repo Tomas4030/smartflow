@@ -1,11 +1,10 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
-const { requireAuth } = require("../middleware/auth");
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get("/", requireAuth, async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const municipalities = await prisma.municipality.findMany({
       orderBy: {
