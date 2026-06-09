@@ -1,13 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
+
+const intersectionRoutes = require("./routes/intersections");
 const authRoutes = require("./routes/auth");
 const municipalityRoutes = require("./routes/municipalities");
 const eventRoutes = require("./routes/events");
+
 const { requireAuth } = require("./middleware/auth");
+
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 app.use(cors({
   origin: true,
   credentials: true
@@ -21,6 +26,7 @@ app.get("/api/health", (req, res) => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/municipalities", municipalityRoutes);
+app.use("/api/intersections", intersectionRoutes);
 app.use("/api/events", requireAuth, eventRoutes);
 app.use((req, res) => {
   res.status(404).json({
