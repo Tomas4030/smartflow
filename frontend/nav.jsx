@@ -76,6 +76,10 @@ function Nav({ onTweaksOpen }) {
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", boxShadow: "0 0 8px var(--green)" }} />
             {t.nav.simulator}
           </a>
+            <a href="login.html" className="btn btn-primary" style={{ padding: "10px 16px" }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", boxShadow: "0 0 8px var(--green)" }} />
+            {t.nav.login}
+          </a>
         </div>
       </div>
 

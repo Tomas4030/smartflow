@@ -80,14 +80,14 @@ backend-generate:
 #   Note: make setup uses migrate deploy (applies existing files, no prompt).
 #         Use THIS command when you are the one changing the schema.
 backend-migrate:
-	cd backend && npx prisma migrate dev
+	set -a && . ./.env && set +a && cd backend && npx prisma migrate dev
 
 # make backend-seed
 #   Insert mock data into the database (municipalities, users,
 #   intersections, detection events). Safe to re-run — skips
 #   records that already exist and skips events if any are present.
 backend-seed:
-	cd backend && npm run seed
+	set -a && . ./.env && set +a && cd backend && npm run seed
 
 # make backend-studio
 #   Open Prisma Studio in the browser — a visual DB editor.
