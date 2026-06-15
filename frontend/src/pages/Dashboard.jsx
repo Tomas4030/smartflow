@@ -79,7 +79,7 @@ function DashboardContent({ intersections, events, municipality }) {
           }}
         >
           <span className="display" style={{ fontSize: 16, fontWeight: 500 }}>
-            Eventos & Deteções Recentes
+            Eventos & Eventos Recentes
           </span>
           <span
             className="mono"
@@ -251,7 +251,7 @@ export default function DashboardPage() {
                 <StubPage title="Interseções" eyebrow="GESTÃO" />
               )}
               {activePage === "detections" && (
-                <StubPage title="Deteções" eyebrow="HISTÓRICO" />
+                <StubPage title="Eventos" eyebrow="HISTÓRICO" />
               )}
               {activePage === "alerts" && (
                 <StubPage title="Alertas" eyebrow="NOTIFICAÇÕES" />

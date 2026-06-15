@@ -1,15 +1,34 @@
 const express = require('express');
-const prisma   = require('../prisma');
+const prisma = require('../prisma');
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
   const { intersectionId, date } = req.query;
-  const { municipalityId }       = req.user;
+  const { municipalityId } = req.user;
 
   const where = {
     intersection: { municipalityId },
   };
+
+  if (intersectionId) where.intersectionId = intersectionId;
+
+  if (req.query.from || req.query.to) {
+    where.detectedAt = {};
+    if (req.query.from) where.detectedAt.gte = new Date(req.query.from + "T00:00:00Z");
+    if (req.query.to) where.detectedAt.lte = new Date(req.query.to + "T23:59:59Z");
+  }
+
+  if (req.query.status === "active") where.resolvedAt = null;
+  if (req.query.status === "resolved") where.resolvedAt = { not: null };
+
+  if (date) {
+    const start = new Date(date);
+    const end = new Date(date);
+    end.setDate(end.getDate() + 1);
+    where.detectedAt = { gte: start, lt: end };
+  }
+
 
   if (intersectionId) {
     where.intersectionId = intersectionId;
@@ -17,7 +36,7 @@ router.get('/', async (req, res) => {
 
   if (date) {
     const start = new Date(date);
-    const end   = new Date(date);
+    const end = new Date(date);
     end.setDate(end.getDate() + 1);
     where.detectedAt = { gte: start, lt: end };
   }
@@ -44,7 +63,7 @@ router.get('/:id', async (req, res) => {
   try {
     const event = await prisma.detectionEvent.findFirst({
       where: {
-        id:           req.params.id,
+        id: req.params.id,
         intersection: { municipalityId },
       },
       include: {
@@ -63,7 +82,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/trigger', async (req, res) => {
   const { intersectionId, greenDurationS } = req.body;
-  const { municipalityId }                 = req.user;
+  const { municipalityId } = req.user;
 
   if (!intersectionId || !greenDurationS) {
     return res.status(400).json({
@@ -92,13 +111,13 @@ router.post('/trigger', async (req, res) => {
       prisma.detectionEvent.create({
         data: {
           intersectionId,
-          triggeredBy:   'manual',
+          triggeredBy: 'manual',
           greenDurationS,
         },
       }),
       prisma.intersection.update({
         where: { id: intersectionId },
-        data:  { status: 'priority' },
+        data: { status: 'priority' },
       }),
     ]);
 
@@ -119,7 +138,7 @@ router.post('/:id/resolve', async (req, res) => {
   try {
     const event = await prisma.detectionEvent.findFirst({
       where: {
-        id:           req.params.id,
+        id: req.params.id,
         intersection: { municipalityId },
       },
     });
@@ -135,11 +154,11 @@ router.post('/:id/resolve', async (req, res) => {
     const [updatedEvent] = await prisma.$transaction([
       prisma.detectionEvent.update({
         where: { id: req.params.id },
-        data:  { resolvedAt: new Date() },
+        data: { resolvedAt: new Date() },
       }),
       prisma.intersection.update({
         where: { id: event.intersectionId },
-        data:  { status: 'idle' },
+        data: { status: 'idle' },
       }),
     ]);
 

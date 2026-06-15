@@ -313,7 +313,7 @@ export function Contact() {
         <Reveal delay={220}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 12, marginTop: 36, flexWrap: "wrap", justifyContent: "center" }}>
             <a href={`mailto:${t.contact.email}`} className="btn btn-primary">{t.contact.cta} →</a>
-            <a href="#top" className="btn btn-ghost">{t.nav.simulator}</a>
+            <a href="#top" className="btn btn-ghost">{t.nav.loginBt}</a>
           </div>
           <div className="mono" style={{ marginTop: 28, fontSize: 13, color: "var(--fg-muted)" }}>{t.contact.email}</div>
         </Reveal>
