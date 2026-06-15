@@ -1,5 +1,4 @@
-
-window.SF_I18N = {
+export const SF_I18N = {
   pt: {
     nav: {
       problem: "Problema",
@@ -271,4 +270,4 @@ window.SF_I18N = {
     },
     footer_note: "Academic project · Smart Flow 2026",
   },
-};
+}

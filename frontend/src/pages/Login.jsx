@@ -1,4 +1,8 @@
-const { useState, useEffect } = React;
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTheme } from '../shared'
+import { AUTH } from '../auth'
+import { Logomark } from '../components/Logomark'
 
 function IconEye({ open }) {
   return open ? (
@@ -48,7 +52,8 @@ function IconSpinner() {
   );
 }
 
-function LoginPage() {
+export default function LoginPage() {
+  const navigate = useNavigate();
   const [theme, setTheme]               = useTheme();
   const [email, setEmail]               = useState("");
   const [password, setPassword]         = useState("");
@@ -58,7 +63,7 @@ function LoginPage() {
   const [shaking, setShaking]           = useState(false);
 
   useEffect(() => {
-    AUTH.redirectIfAuthed();
+    if (AUTH.getToken()) navigate('/dashboard');
   }, []);
 
   function shake(msg) {
@@ -77,8 +82,8 @@ function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      await AUTH.login( email, password);
-      window.location.href = "dashboard.html";
+      await AUTH.login(email, password);
+      navigate('/dashboard');
     } catch (err) {
       setLoading(false);
       if (err.status === 401) {
@@ -208,7 +213,7 @@ function LoginPage() {
           borderBottom: "1px solid var(--hairline)",
         }}>
           <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <a href="index.html" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <a href="/" onClick={(e) => { e.preventDefault(); navigate('/'); }} style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
               <Logomark size={22} />
               <span className="display" style={{ fontSize: 17, fontWeight: 600, letterSpacing: "-0.02em", color: "var(--fg)" }}>
                 Smart<span style={{ color: "var(--accent)" }}>Flow</span>
@@ -272,8 +277,6 @@ function LoginPage() {
                 </div>
               )}
 
-  
-
               {/* Email */}
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <label htmlFor="sf-email" style={labelSty}>E-mail</label>
@@ -326,6 +329,3 @@ function LoginPage() {
     </>
   );
 }
-
-const loginRoot = ReactDOM.createRoot(document.getElementById("root"));
-loginRoot.render(<LoginPage />);

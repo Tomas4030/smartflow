@@ -1,7 +1,6 @@
 services:
   # ── Frontend ─────────────────────────────────────────────────
-  # Nginx serves the static React files and proxies /api/* to the backend.
-  # No build step needed — React + Babel run in the browser from CDN.
+  # Vite builds the React SPA; Nginx serves it and proxies /api/*.
   frontend:
     build:
       context: ./frontend
