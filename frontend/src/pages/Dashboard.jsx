@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { AUTH } from "../auth";
 import {
   Sidebar,
-  TopBar,
   StatCards,
   MonitoringMap,
   EventsTable,
@@ -33,7 +32,7 @@ function DashboardContent({ intersections, events, municipality }) {
         </div>
       </div>
 
-      <StatCards intersections={intersections} />
+      <StatCards intersections={intersections} events={events} />
 
       <div
         style={{
@@ -53,40 +52,9 @@ function DashboardContent({ intersections, events, municipality }) {
             borderBottom: "1px solid var(--hairline)",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <span className="display" style={{ fontSize: 16, fontWeight: 500 }}>
-              Mapa de Monitoramento
-            </span>
-            {intersections.some((i) => i.status === "priority") && (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  padding: "4px 10px",
-                  borderRadius: 999,
-                  background:
-                    "color-mix(in oklch, var(--red) 12%, transparent)",
-                  border:
-                    "1px solid color-mix(in oklch, var(--red) 30%, transparent)",
-                  fontFamily: "var(--font-mono)",
-                  fontSize: 10.5,
-                  color: "var(--red)",
-                }}
-              >
-                <span
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: "50%",
-                    background: "var(--red)",
-                    animation: "db-blink 1s infinite",
-                  }}
-                />
-                Prioridade Ativa
-              </span>
-            )}
-          </div>
+          <span className="display" style={{ fontSize: 16, fontWeight: 500 }}>
+            Mapa de Monitoramento
+          </span>
         </div>
         <div style={{ padding: "16px 20px" }}>
           <MonitoringMap intersections={intersections} />
@@ -260,7 +228,7 @@ export default function DashboardPage() {
           minWidth: 0,
         }}
       >
-        <TopBar user={user} />
+        
         <main style={{ flex: 1, overflowY: "auto" }}>
           {loading ? (
             <div
