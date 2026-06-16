@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactDOM from "react-dom/client";
 import { AUTH } from "../auth.js";
-import { Sidebar } from "../components/dashboard/Sidebar.jsx"; 
 
 function IcoPencil() {
   return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>;
@@ -179,8 +177,8 @@ function Modal({ mode, target, onClose, onSaved }) {
         headers: { "Content-Type": "application/json", ...AUTH.authHeaders() },
         body: JSON.stringify(payload)
       });
-      const data = await r.json();
-      onSaved(data, isEdit);
+      const json = await r.json();
+      onSaved(json.data || json, isEdit);
     } catch (_) { /* silent */ }
     setSaving(false);
   }
@@ -211,7 +209,7 @@ function Modal({ mode, target, onClose, onSaved }) {
             <div ref={firstRef} tabIndex={-1} style={{ outline: "none" }}>
               <Field id="f-name" label="Nome" value={form.name} onChange={setF("name")} placeholder="R. Exemplo × Av. Central" error={errs.name} />
             </div>
-            <Field id="f-addr" label="Morada" value={form.address} onChange={setF("address")} placeholder="Av. da Liberdade 1, Albufeira" error={errs.address} />
+            <Field id="f-addr" label="Morada" value={form.address} onChange={setF("address")} placeholder="Av. da Liberdade 1" error={errs.address} />
             <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
               <label style={{ fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--fg-muted)" }}>Localização</label>
               <MapPicker
@@ -247,7 +245,8 @@ function Modal({ mode, target, onClose, onSaved }) {
 }
 
 export function IntersectionsPage() {
-  const [user, setUser] = useState(null);
+  const user = AUTH.getUser();
+  const municipality = user?.municipality || "SmartFlow";
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalMode, setModalMode] = useState(null);
@@ -255,11 +254,6 @@ export function IntersectionsPage() {
   const [deletingId, setDeletingId] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [toast, setToast] = useState(null);
-
-  useEffect(() => {
-    const u = AUTH.requireAuth();
-    if (u) setUser(u);
-  }, []);
 
   function loadRows() {
     setLoading(true);
@@ -300,12 +294,6 @@ export function IntersectionsPage() {
 
   const isAdmin = user && (user.role === "admin" || user.role === "superadmin");
 
-  const handleLogout = () => {
-    if (typeof AUTH !== "undefined" && AUTH.logout) {
-      AUTH.logout();
-    }
-  };
-
   return (
     <>
       <style>{`
@@ -331,99 +319,90 @@ export function IntersectionsPage() {
         .leaflet-attribution-flag { display: none !important; }
       `}</style>
 
-      <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex", flexDirection: "row" }}>
-        
-        <Sidebar 
-          active="intersections" 
-          onLogout={handleLogout} 
-          municipality={user ? user.municipality || "Albufeira" : "SmartFlow"} 
-        />
+      <div style={{ padding: "36px 0 56px" }}>
+        <div className="container">
 
-        <main style={{ flex: 1, padding: "36px 0 56px", overflowY: "auto" }}>
-          <div className="container">
-
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 28, gap: 16, flexWrap: "wrap" }}>
-              <div>
-                <p className="eyebrow" style={{ marginBottom: 6 }}>Albufeira · Gestão de rede</p>
-                <h1 className="display" style={{ margin: 0, fontSize: 28, letterSpacing: "-0.025em" }}>Cruzamentos</h1>
-              </div>
-              {isAdmin && (
-                <button
-                  onClick={() => setModalMode("add")}
-                  style={{ display: "inline-flex", alignItems: "center", gap: 8, height: 42, padding: "0 18px", borderRadius: "var(--radius-sm)", background: "var(--accent)", color: "#fff", border: "none", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 600, cursor: "pointer", transition: "background .16s, transform .12s", flexShrink: 0 }}
-                  onMouseEnter={e => e.currentTarget.style.background = "var(--accent-2)"}
-                  onMouseLeave={e => e.currentTarget.style.background = "var(--accent)"}
-                >
-                  <IcoPlus /> Adicionar cruzamento
-                </button>
-              )}
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 28, gap: 16, flexWrap: "wrap" }}>
+            <div>
+              <p className="eyebrow" style={{ marginBottom: 6 }}>{municipality} · Gestão de rede</p>
+              <h1 className="display" style={{ margin: 0, fontSize: 28, letterSpacing: "-0.025em" }}>Cruzamentos</h1>
             </div>
-
-            <div style={{ background: "var(--bg-2)", border: "1px solid var(--hairline)", borderRadius: "var(--radius)", overflow: "hidden" }}>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 640 }}>
-                  <thead>
-                    <tr style={{ background: "var(--surface)" }}>
-                      {["Nome", "Morada", "Estado", "Lat", "Lng", isAdmin ? "Ações" : ""].filter(Boolean).map(h => (
-                        <th key={h} style={{ padding: "11px 16px", textAlign: "left", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--fg-muted)", fontWeight: 500, borderBottom: "1px solid var(--hairline)", whiteSpace: "nowrap" }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loading ? (
-                      Array.from({ length: 5 }).map((_, i) => <IntSkelRow key={i} />)
-                    ) : rows.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} style={{ padding: "52px 16px", textAlign: "center", color: "var(--fg-muted)" }}>
-                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                            <IcoEmpty />
-                            <span style={{ fontSize: 13.5 }}>Nenhum cruzamento registado.</span>
-                          </div>
-                        </td>
-                      </tr>
-                    ) : rows.map((row, idx) => (
-                      <tr key={row.id} className="sf-int-tr" style={{ borderBottom: idx < rows.length - 1 ? "1px solid var(--hairline)" : "none" }}>
-                        <td style={{ padding: "13px 16px", fontSize: 13.5, color: "var(--fg)", fontWeight: 500, maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.name}</td>
-                        <td style={{ padding: "13px 16px", fontSize: 13, color: "var(--fg-dim)", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.address}</td>
-                        <td style={{ padding: "13px 16px" }}><StatusBadge status={row.status} /></td>
-                        <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)" }}>{Number(row.lat).toFixed(4)}</td>
-                        <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)" }}>{Number(row.lng).toFixed(4)}</td>
-                        {isAdmin && (
-                          <td style={{ padding: "10px 16px" }}>
-                            {deletingId === row.id ? (
-                              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "nowrap" }}>
-                                <span style={{ fontSize: 12, color: "var(--fg-muted)", whiteSpace: "nowrap" }}>Tem a certeza?</span>
-                                <button onClick={() => setDeletingId(null)} style={{ height: 28, padding: "0 10px", borderRadius: 6, fontSize: 12, color: "var(--fg-muted)", border: "1px solid var(--hairline)", background: "transparent", cursor: "pointer" }}>Não</button>
-                                <button onClick={() => handleDelete(row.id)} disabled={deleting} style={{ height: 28, padding: "0 10px", borderRadius: 6, fontSize: 12, fontWeight: 600, color: "#fff", background: "var(--red)", border: "none", cursor: deleting ? "default" : "pointer", opacity: deleting ? .65 : 1 }}>Sim</button>
-                              </div>
-                            ) : (
-                              <div style={{ display: "flex", gap: 6 }}>
-                                <button className="sf-int-act-btn" title="Editar" onClick={() => { setEditTarget(row); setModalMode("edit"); }}><IcoPencil /></button>
-                                <button className="sf-int-act-btn del" title="Apagar" onClick={() => setDeletingId(row.id)}><IcoTrash /></button>
-                              </div>
-                            )}
-                          </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {!loading && rows.length > 0 && (
-                <div style={{ padding: "11px 20px", borderTop: "1px solid var(--hairline)", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, color: "var(--fg-muted)" }}>{rows.length} cruzamento{rows.length !== 1 ? "s" : ""}</span>
-                  {["idle", "priority", "offline", "pending"].map(s => {
-                    const n = rows.filter(r => r.status === s).length;
-                    if (!n) return null;
-                    return <StatusBadge key={s} status={s} />;
-                  })}
-                </div>
-              )}
-            </div>
-
+            {isAdmin && (
+              <button
+                onClick={() => setModalMode("add")}
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, height: 42, padding: "0 18px", borderRadius: "var(--radius-sm)", background: "var(--accent)", color: "#fff", border: "none", fontFamily: "var(--font-body)", fontSize: 13.5, fontWeight: 600, cursor: "pointer", transition: "background .16s, transform .12s", flexShrink: 0 }}
+                onMouseEnter={e => e.currentTarget.style.background = "var(--accent-2)"}
+                onMouseLeave={e => e.currentTarget.style.background = "var(--accent)"}
+              >
+                <IcoPlus /> Adicionar cruzamento
+              </button>
+            )}
           </div>
-        </main>
+
+          <div style={{ background: "var(--bg-2)", border: "1px solid var(--hairline)", borderRadius: "var(--radius)", overflow: "hidden" }}>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 640 }}>
+                <thead>
+                  <tr style={{ background: "var(--surface)" }}>
+                    {["Nome", "Morada", "Estado", "Lat", "Lng", isAdmin ? "Ações" : ""].filter(Boolean).map(h => (
+                      <th key={h} style={{ padding: "11px 16px", textAlign: "left", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--fg-muted)", fontWeight: 500, borderBottom: "1px solid var(--hairline)", whiteSpace: "nowrap" }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    Array.from({ length: 5 }).map((_, i) => <IntSkelRow key={i} />)
+                  ) : rows.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} style={{ padding: "52px 16px", textAlign: "center", color: "var(--fg-muted)" }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                          <IcoEmpty />
+                          <span style={{ fontSize: 13.5 }}>Nenhum cruzamento registado.</span>
+                        </div>
+                      </td>
+                    </tr>
+                  ) : rows.map((row, idx) => (
+                    <tr key={row.id} className="sf-int-tr" style={{ borderBottom: idx < rows.length - 1 ? "1px solid var(--hairline)" : "none" }}>
+                      <td style={{ padding: "13px 16px", fontSize: 13.5, color: "var(--fg)", fontWeight: 500, maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.name}</td>
+                      <td style={{ padding: "13px 16px", fontSize: 13, color: "var(--fg-dim)", maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.address}</td>
+                      <td style={{ padding: "13px 16px" }}><StatusBadge status={row.status} /></td>
+                      <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)" }}>{Number(row.lat).toFixed(4)}</td>
+                      <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)" }}>{Number(row.lng).toFixed(4)}</td>
+                      {isAdmin && (
+                        <td style={{ padding: "10px 16px" }}>
+                          {deletingId === row.id ? (
+                            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "nowrap" }}>
+                              <span style={{ fontSize: 12, color: "var(--fg-muted)", whiteSpace: "nowrap" }}>Tem a certeza?</span>
+                              <button onClick={() => setDeletingId(null)} style={{ height: 28, padding: "0 10px", borderRadius: 6, fontSize: 12, color: "var(--fg-muted)", border: "1px solid var(--hairline)", background: "transparent", cursor: "pointer" }}>Não</button>
+                              <button onClick={() => handleDelete(row.id)} disabled={deleting} style={{ height: 28, padding: "0 10px", borderRadius: 6, fontSize: 12, fontWeight: 600, color: "#fff", background: "var(--red)", border: "none", cursor: deleting ? "default" : "pointer", opacity: deleting ? .65 : 1 }}>Sim</button>
+                            </div>
+                          ) : (
+                            <div style={{ display: "flex", gap: 6 }}>
+                              <button className="sf-int-act-btn" title="Editar" onClick={() => { setEditTarget(row); setModalMode("edit"); }}><IcoPencil /></button>
+                              <button className="sf-int-act-btn del" title="Apagar" onClick={() => setDeletingId(row.id)}><IcoTrash /></button>
+                            </div>
+                          )}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {!loading && rows.length > 0 && (
+              <div style={{ padding: "11px 20px", borderTop: "1px solid var(--hairline)", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, color: "var(--fg-muted)" }}>{rows.length} cruzamento{rows.length !== 1 ? "s" : ""}</span>
+                {["idle", "priority", "offline", "pending"].map(s => {
+                  const n = rows.filter(r => r.status === s).length;
+                  if (!n) return null;
+                  return <StatusBadge key={s} status={s} />;
+                })}
+              </div>
+            )}
+          </div>
+
+        </div>
       </div>
 
       {modalMode && (
@@ -453,15 +432,5 @@ export function IntersectionsPage() {
         </div>
       )}
     </>
-  );
-}
-
-const container = document.getElementById("root");
-if (container) {
-  const root = ReactDOM.createRoot(container);
-  root.render(
-    <React.StrictMode>
-      <IntersectionsPage />
-    </React.StrictMode>
   );
 }

@@ -41,13 +41,13 @@ export const AUTH = {
   logout() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
-    window.location.href = "login.html";
+    window.location.href = "/login";
   },
 
   requireAuth() {
     const user = this.getUser();
     if (!user || !this.getToken()) {
-      window.location.href = "login.html";
+      window.location.href = "/login";
       return null;
     }
     return user;
@@ -56,7 +56,7 @@ export const AUTH = {
   redirectIfAuthed() {
     const user = this.getUser();
     if (!user || !this.getToken()) return;
-    window.location.href = user.role === "superadmin" ? "admin.html" : "dashboard.html";
+    window.location.href = user.role === "superadmin" ? "/admin" : "/dashboard";
   },
 };
 

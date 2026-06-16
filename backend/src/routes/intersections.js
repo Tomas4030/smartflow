@@ -5,23 +5,25 @@ const { requireAuth } = require("../middleware/auth");
 const router = express.Router();
 const prisma = new PrismaClient();
 
-const VALID_STATUSES = ["idle", "priority", "offline"];
+const ADMIN_STATUSES = ["priority", "offline", "pending"];
+const SUPERADMIN_STATUSES = ["idle", ...ADMIN_STATUSES];
 
 function isAdmin(req) {
-  return req.user?.role === "admin";
+  return req.user?.role === "admin" || req.user?.role === "superadmin";
+}
+
+function isSuperAdmin(req) {
+  return req.user?.role === "superadmin";
 }
 
 function requireAdmin(req, res, next) {
   if (!isAdmin(req)) {
-    return res.status(403).json({
-      error: "Admin role required"
-    });
+    return res.status(403).json({ error: "Admin role required" });
   }
-
   return next();
 }
 
-function validateIntersectionPayload(payload, isUpdate = false) {
+function validateIntersectionPayload(payload, isUpdate = false, allowedStatuses = SUPERADMIN_STATUSES) {
   const errors = [];
 
   if (!isUpdate || payload.name !== undefined) {
@@ -38,7 +40,6 @@ function validateIntersectionPayload(payload, isUpdate = false) {
 
   if (!isUpdate || payload.lat !== undefined) {
     const lat = Number(payload.lat);
-
     if (Number.isNaN(lat) || lat < -90 || lat > 90) {
       errors.push("lat must be a number between -90 and 90");
     }
@@ -46,14 +47,13 @@ function validateIntersectionPayload(payload, isUpdate = false) {
 
   if (!isUpdate || payload.lng !== undefined) {
     const lng = Number(payload.lng);
-
     if (Number.isNaN(lng) || lng < -180 || lng > 180) {
       errors.push("lng must be a number between -180 and 180");
     }
   }
 
-  if (payload.status !== undefined && !VALID_STATUSES.includes(payload.status)) {
-    errors.push(`status must be one of: ${VALID_STATUSES.join(", ")}`);
+  if (payload.status !== undefined && !allowedStatuses.includes(payload.status)) {
+    errors.push(`status must be one of: ${allowedStatuses.join(", ")}`);
   }
 
   return errors;
@@ -119,7 +119,7 @@ router.post("/", requireAuth, requireAdmin, async (req, res, next) => {
         address: req.body.address,
         lat: new Prisma.Decimal(req.body.lat),
         lng: new Prisma.Decimal(req.body.lng),
-        status: req.body.status || "idle"
+        status: req.body.status || "pending"
       }
     });
 
@@ -131,9 +131,10 @@ router.post("/", requireAuth, requireAdmin, async (req, res, next) => {
   }
 });
 
-router.put("/:id", requireAuth, async (req, res, next) => {
+router.put("/:id", requireAuth, requireAdmin, async (req, res, next) => {
   try {
-    const errors = validateIntersectionPayload(req.body, true);
+    const allowedStatuses = isSuperAdmin(req) ? SUPERADMIN_STATUSES : ADMIN_STATUSES;
+    const errors = validateIntersectionPayload(req.body, true, allowedStatuses);
 
     if (errors.length > 0) {
       return res.status(400).json({

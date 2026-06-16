@@ -34,7 +34,7 @@ start:
 #   Starts DB + backend in Docker, then runs Vite dev server
 #   with hot reload on http://localhost:5173
 dev:
-	docker compose up -d db backend
+	docker compose up --build -d db backend
 	cd frontend && npm run dev
 
 # ── Setup ─────────────────────────────────────────────────────

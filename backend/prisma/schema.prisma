@@ -41,7 +41,7 @@ model Intersection {
   address        String
   lat            Decimal
   lng            Decimal
-  status         String   @default("idle") // idle | priority | offline
+  status         String   @default("idle") // pending | idle | priority | offline
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 

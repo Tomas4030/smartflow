@@ -1,6 +1,5 @@
 export { Ic } from './Icons'
-export { Sidebar } from './Sidebar'
-export { TopBar } from './TopBar'
+export { DashboardNav } from './DashboardNav'
 export { StatCards } from './StatCards'
 export { MonitoringMap } from './MonitoringMap'
 export { EventsTable } from './EventsTable'
