@@ -10,7 +10,7 @@ export const SF_I18N = {
       cta: "Falar com a equipa",
     },
     hero: {
-      tag: "SISTEMA INTELIGENTE DE PRIORIDADE PARA EMERGÊNCIAS",
+
       title_a: "Cada segundo",
       title_b: "salva uma vida.",
       sub: "A Smart Flow detecta veículos de emergência e abre o caminho — semáforo a semáforo, em tempo real.",
@@ -29,7 +29,7 @@ export const SF_I18N = {
       stats: [
         { v: "1.4M", l: "Acionamentos anuais em Portugal" },
         { v: "3 min", l: "Resposta média ao envio" },
-        { v: "10–15 min", l: "Perdidos no transporte ao hospital" },
+        { v: "15 min", l: "Perdidos no transporte ao hospital" },
         { v: "−7%", l: "Hipóteses de sobreviver, a cada 3 min" },
       ],
     },

@@ -41,6 +41,9 @@
 html, body { margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none;
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-body);
