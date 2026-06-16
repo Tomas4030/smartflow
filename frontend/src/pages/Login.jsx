@@ -7,15 +7,15 @@ import { Logomark } from '../components/Logomark'
 function IconEye({ open }) {
   return open ? (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-      <circle cx="12" cy="12" r="3"/>
+      stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+      <circle cx="12" cy="12" r="3" />
     </svg>
   ) : (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-      <line x1="1" y1="1" x2="23" y2="23"/>
+      stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+      <line x1="1" y1="1" x2="23" y2="23" />
     </svg>
   );
 }
@@ -23,11 +23,11 @@ function IconEye({ open }) {
 function IconAlert() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-         style={{ flexShrink: 0 }}>
-      <circle cx="12" cy="12" r="10"/>
-      <line x1="12" y1="8" x2="12" y2="12"/>
-      <circle cx="12" cy="16" r="0.8" fill="currentColor" stroke="none"/>
+      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+      style={{ flexShrink: 0 }}>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <circle cx="12" cy="16" r="0.8" fill="currentColor" stroke="none" />
     </svg>
   );
 }
@@ -35,9 +35,9 @@ function IconAlert() {
 function IconArrow() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <line x1="5" y1="12" x2="19" y2="12"/>
-      <polyline points="12 5 19 12 12 19"/>
+      stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
     </svg>
   );
 }
@@ -45,22 +45,22 @@ function IconArrow() {
 function IconSpinner() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
-         style={{ animation: "sf-spin 0.8s linear infinite" }}>
-      <path d="M21 12a9 9 0 1 1-6.22-8.56"/>
+      stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
+      style={{ animation: "sf-spin 0.8s linear infinite" }}>
+      <path d="M21 12a9 9 0 1 1-6.22-8.56" />
     </svg>
   );
 }
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [theme, setTheme]               = useTheme();
-  const [email, setEmail]               = useState("");
-  const [password, setPassword]         = useState("");
-  const [showPw, setShowPw]             = useState(false);
-  const [error, setError]               = useState("");
-  const [loading, setLoading]           = useState(false);
-  const [shaking, setShaking]           = useState(false);
+  const [theme, setTheme] = useTheme();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [shaking, setShaking] = useState(false);
 
   useEffect(() => {
     if (AUTH.getToken()) navigate('/dashboard');
@@ -125,10 +125,6 @@ export default function LoginPage() {
           min-height: 100vh;
           display: flex;
           flex-direction: column;
-          background-image:
-            linear-gradient(var(--grid) 1px, transparent 1px),
-            linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-          background-size: 48px 48px;
         }
         .sf-login-input:focus {
           border-color: var(--accent) !important;
@@ -219,21 +215,6 @@ export default function LoginPage() {
                 Smart<span style={{ color: "var(--accent)" }}>Flow</span>
               </span>
             </a>
-            <button className="sf-theme-btn" onClick={() => setTheme(theme === "dark" ? "light" : "dark")} aria-label="Alternar tema">
-              {theme === "dark" ? (
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <circle cx="12" cy="12" r="5"/>
-                  <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                  <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                </svg>
-              ) : (
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                </svg>
-              )}
-            </button>
           </div>
         </header>
 
@@ -241,15 +222,7 @@ export default function LoginPage() {
         <main style={{ flex: 1, display: "grid", placeItems: "center", padding: "clamp(28px, 6vh, 72px) 20px" }}>
           <div style={{ width: "100%", maxWidth: 396 }}>
 
-            <div style={{ textAlign: "center", marginBottom: 28 }}>
-              <Logomark size={38} />
-              <h1 className="display" style={{ margin: "14px 0 5px", fontSize: 26, fontWeight: 600, letterSpacing: "-0.027em", color: "var(--fg)" }}>
-                Entrar
-              </h1>
-              <p style={{ margin: 0, fontSize: 13.5, color: "var(--fg-muted)", letterSpacing: "-0.005em" }}>
-                Painel de controlo SmartFlow
-              </p>
-            </div>
+
 
             <form
               onSubmit={handleSubmit}
@@ -264,6 +237,15 @@ export default function LoginPage() {
                 display: "flex", flexDirection: "column", gap: 20,
               }}
             >
+              <div style={{ textAlign: "center", marginBottom: 28 }}>
+                <Logomark size={38} />
+                <h1 className="display" style={{ margin: "14px 0 5px", fontSize: 26, fontWeight: 600, letterSpacing: "-0.027em", color: "var(--fg)" }}>
+                  Entrar
+                </h1>
+                <p style={{ margin: 0, fontSize: 13.5, color: "var(--fg-muted)", letterSpacing: "-0.005em" }}>
+                  Painel de controlo SmartFlow
+                </p>
+              </div>
               {error && (
                 <div className="sf-error-msg" role="alert" style={{
                   display: "flex", alignItems: "center", gap: 9,

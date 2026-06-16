@@ -6,7 +6,7 @@ export const SF_I18N = {
       market: "Mercado",
       roadmap: "Roteiro",
       team: "Equipa",
-      simulator: "Simulador",
+      loginBt: "Login",
       cta: "Falar com a equipa",
     },
     hero: {
@@ -111,7 +111,7 @@ export const SF_I18N = {
     },
     sim: {
       back: "← Voltar à página",
-      title: "Simulador",
+      title: "Login",
       sub: "Albufeira · cenário de despacho de emergência",
       dispatch: "Despachar ambulância",
       reset: "Reiniciar",
@@ -142,7 +142,7 @@ export const SF_I18N = {
       market: "Market",
       roadmap: "Roadmap",
       team: "Team",
-      simulator: "Simulator",
+      loginBt: "Login",
       cta: "Talk to the team",
     },
     hero: {
@@ -247,7 +247,7 @@ export const SF_I18N = {
     },
     sim: {
       back: "← Back to site",
-      title: "Simulator",
+      title: "loginBt",
       sub: "Albufeira · emergency dispatch scenario",
       dispatch: "Dispatch ambulance",
       reset: "Reset",

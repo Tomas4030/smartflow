@@ -76,7 +76,7 @@ sequenceDiagram
 Serves all static files — HTML, JSX, CSS, fonts — and acts as a **reverse proxy** for API requests. Because all traffic passes through Nginx on port 80, the browser always communicates with a single origin, eliminating CORS issues.
 
 **Responsibilities:**
-- Serve `index.html`, `simulator.html`, `styles.css`, `*.jsx`, `i18n.js`
+- Serve `index.html`, `loginBt.html`, `styles.css`, `*.jsx`, `i18n.js`
 - Proxy all `/api/*` requests to the `backend` service
 - Fallback to `index.html` for client-side navigation
 
@@ -110,9 +110,9 @@ Relational database. Data is persisted in a named Docker volume (`pgdata`) so it
 
 ### OSRM — External
 
-The open-source routing engine used by the Leaflet map simulator to draw road-following ambulance routes. Calls are made directly from the browser to `router.project-osrm.org`.
+The open-source routing engine used by the Leaflet map loginBt to draw road-following ambulance routes. Calls are made directly from the browser to `router.project-osrm.org`.
 
-> **Note:** OSRM is a public external service outside our control. If it is unavailable, the simulator falls back to a straight-line route. This dependency is explicitly noted as out-of-scope for reliability guarantees.
+> **Note:** OSRM is a public external service outside our control. If it is unavailable, the loginBt falls back to a straight-line route. This dependency is explicitly noted as out-of-scope for reliability guarantees.
 
 ---
 
