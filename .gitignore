@@ -36,3 +36,7 @@ yarn-error.log*
 next-env.d.ts
 
 dist
+
+# Windows Zone.Identifier streams (internet-downloaded files)
+*:Zone.Identifier
+*Zone.Identifier
