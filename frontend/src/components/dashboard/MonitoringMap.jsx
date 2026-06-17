@@ -4,7 +4,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 function createTrafficIcon(status, phase) {
-  const colors = { idle: '#ef4444', priority: '#4ade80', offline: '#6b7280', pending: '#f59e0b' }
+  const colors = { idle: '#4ade80', priority: '#ef4444', offline: '#6b7280', pending: '#f59e0b' }
   const base = colors[status] || colors.offline
 
   let red = 'rgba(100,100,100,0.3)', amber = 'rgba(100,100,100,0.3)', green = 'rgba(100,100,100,0.3)'
@@ -86,11 +86,11 @@ export function MonitoringMap({ intersections }) {
                 <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 4 }}>{inter.name}</div>
                 <div style={{ fontSize: 12, color: "#666", marginBottom: 8 }}>{inter.address}</div>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "3px 8px", borderRadius: 999, fontSize: 11, fontWeight: 500,
-                  background: inter.status === 'idle' ? '#fee2e2' : inter.status === 'priority' ? '#dcfce7' : inter.status === 'pending' ? '#fef3c7' : '#f3f4f6',
-                  color: inter.status === 'idle' ? '#991b1b' : inter.status === 'priority' ? '#166534' : inter.status === 'pending' ? '#92400e' : '#374151',
+                  background: inter.status === 'idle' ? '#dcfce7' : inter.status === 'priority' ? '#fee2e2' : inter.status === 'pending' ? '#fef3c7' : '#f3f4f6',
+                  color: inter.status === 'idle' ? '#166534' : inter.status === 'priority' ? '#991b1b' : inter.status === 'pending' ? '#92400e' : '#374151',
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%",
-                    background: inter.status === 'idle' ? '#ef4444' : inter.status === 'priority' ? '#4ade80' : inter.status === 'pending' ? '#f59e0b' : '#6b7280',
+                    background: inter.status === 'idle' ? '#4ade80' : inter.status === 'priority' ? '#ef4444' : inter.status === 'pending' ? '#f59e0b' : '#6b7280',
                   }} />
                   {inter.status === 'idle' ? 'Inativo' : inter.status === 'priority' ? 'Prioridade' : inter.status === 'pending' ? 'Pendente' : 'Offline'}
                 </div>
