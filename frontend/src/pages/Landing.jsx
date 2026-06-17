@@ -1,6 +1,7 @@
 import { Nav } from '../components/Nav'
 import { Hero } from '../components/Hero'
 import { Intro, Problem, Solution, TimeSaved, Market, Roadmap, Compare, Pricing, Team, Contact, Footer } from '../components/Sections'
+import { SupportChat } from '../components/SupportChat'
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Team />
       <Contact />
       <Footer />
+      <SupportChat />
     </>
   )
 }
