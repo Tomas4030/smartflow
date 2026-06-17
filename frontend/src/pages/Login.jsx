@@ -63,7 +63,10 @@ export default function LoginPage() {
   const [shaking, setShaking] = useState(false);
 
   useEffect(() => {
-    if (AUTH.getToken()) navigate('/dashboard');
+    if (AUTH.getToken()) {
+      const u = AUTH.getUser();
+      navigate(u?.role === "superadmin" ? "/admin" : "/dashboard");
+    }
   }, []);
 
   function shake(msg) {
@@ -82,8 +85,8 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     try {
-      await AUTH.login(email, password);
-      navigate('/dashboard');
+      const user = await AUTH.login(email, password);
+      navigate(user.role === "superadmin" ? "/admin" : "/dashboard");
     } catch (err) {
       setLoading(false);
       if (err.status === 401) {

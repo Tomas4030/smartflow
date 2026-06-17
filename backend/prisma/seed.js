@@ -94,6 +94,19 @@ async function main() {
     }
   }
 
+  // ── Super Admin user ──
+  await prisma.user.upsert({
+    where: { email: "superadmin@smartflow.pt" },
+    update: { role: "superadmin" },
+    create: {
+      name: "Super Admin",
+      email: "superadmin@smartflow.pt",
+      passwordHash,
+      role: "superadmin",
+      municipalityId: munById["Albufeira"].id,
+    },
+  });
+
   console.log("  ✓ Municipalities, users and intersections seeded");
 
   // ── Detection events (Lucas — 3.3) ──────────────────────────
