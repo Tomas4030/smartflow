@@ -45,6 +45,7 @@ export function Nav() {
           <a href="#market" style={linkSty}>{t.nav.market}</a>
           <a href="#roadmap" style={linkSty}>{t.nav.roadmap}</a>
           <a href="#team" style={linkSty}>{t.nav.team}</a>
+          <Link to="/simulator" style={{ ...linkSty, color: "var(--accent)" }}>{t.nav.simulator}</Link>
         </nav>
 
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>

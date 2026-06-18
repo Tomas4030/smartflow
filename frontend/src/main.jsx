@@ -14,6 +14,7 @@ import AdminApprovals from './pages/AdminApprovals'
 import AdminHistory from './pages/AdminHistory'
 import AdminMunicipalities from './pages/AdminMunicipalities'
 import AdminLoginPage from './pages/AdminLogin'
+import SimulatorPage from './pages/Simulator'
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('sf_token')
@@ -65,6 +66,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="municipalities" element={<AdminMunicipalities />} />
         </Route>
 
+        <Route path="/simulator" element={<SimulatorPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useT, useScrollProgress, clamp } from "../shared";
 
 function ambulanceXForP(p) {
@@ -1008,7 +1009,113 @@ function ProgressDots({ step }) {
 export function Hero() {
   const [t, lang] = useT();
   const wrapRef = useRef(null);
+  const canvasRef = useRef(null);
   const p = useScrollProgress(wrapRef, { start: 0, end: 1 });
+
+  // Particle constellation — runs once, fades with titleP opacity
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animId;
+    let particles = [];
+    const mouse = { x: null, y: null, radius: 180 };
+
+    class Particle {
+      constructor(x, y, vx, vy, size) {
+        this.x = x; this.y = y;
+        this.vx = vx; this.vy = vy;
+        this.size = size;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(167, 139, 250, 0.75)";
+        ctx.fill();
+      }
+      update() {
+        if (this.x > canvas.width || this.x < 0) this.vx = -this.vx;
+        if (this.y > canvas.height || this.y < 0) this.vy = -this.vy;
+        if (mouse.x !== null) {
+          const dx = mouse.x - this.x, dy = mouse.y - this.y;
+          const d = Math.hypot(dx, dy);
+          if (d < mouse.radius && d > 0) {
+            const f = (mouse.radius - d) / mouse.radius;
+            this.x -= (dx / d) * f * 5;
+            this.y -= (dy / d) * f * 5;
+          }
+        }
+        this.x += this.vx;
+        this.y += this.vy;
+        this.draw();
+      }
+    }
+
+    const init = () => {
+      particles = [];
+      const n = (canvas.width * canvas.height) / 9000;
+      for (let i = 0; i < n; i++) {
+        const s = Math.random() * 1.5 + 0.5;
+        particles.push(new Particle(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height,
+          (Math.random() - 0.5) * 0.4,
+          (Math.random() - 0.5) * 0.4,
+          s,
+        ));
+      }
+    };
+
+    const connect = () => {
+      const maxDist = (canvas.width / 7) * (canvas.height / 7);
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a + 1; b < particles.length; b++) {
+          const dx = particles[a].x - particles[b].x;
+          const dy = particles[a].y - particles[b].y;
+          const dist2 = dx * dx + dy * dy;
+          if (dist2 < maxDist) {
+            const opacity = (1 - dist2 / maxDist) * 0.45;
+            ctx.strokeStyle = `rgba(167, 139, 250, ${opacity})`;
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(particles[a].x, particles[a].y);
+            ctx.lineTo(particles[b].x, particles[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    };
+
+    const animate = () => {
+      animId = requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(pt => pt.update());
+      connect();
+    };
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth || window.innerWidth;
+      canvas.height = canvas.offsetHeight || window.innerHeight;
+      init();
+    };
+
+    const onMove = (e) => { mouse.x = e.clientX; mouse.y = e.clientY; };
+    const onOut = () => { mouse.x = null; mouse.y = null; };
+
+    window.addEventListener("resize", resize);
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseout", onOut);
+    resize();
+    animate();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseout", onOut);
+      cancelAnimationFrame(animId);
+    };
+  }, []);
+
   const titleP = clamp((0.16 - p) / 0.16, 0, 1);
   const sceneIn = clamp((p - 0.05) / 0.18, 0, 1);
   let step = 0;
@@ -1034,131 +1141,141 @@ export function Hero() {
             "radial-gradient(ellipse at 50% 30%, color-mix(in oklch, var(--accent-soft) 28%, var(--bg)) 0%, var(--bg) 65%)",
         }}
       >
-        <div
-          aria-hidden
+      <canvas
+        ref={canvasRef}
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          opacity: titleP,
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          backgroundSize: "64px 64px",
+          opacity: 0.25,
+          maskImage:
+            "radial-gradient(ellipse at center, black 30%, transparent 80%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at center, black 30%, transparent 80%)",
+        }}
+      />
+      <div
+        className="container"
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          opacity: titleP,
+          pointerEvents: titleP < 0.05 ? "none" : "auto",
+          zIndex: 3,
+        }}
+      >
+        <h1
+          className="display"
           style={{
-            position: "absolute",
-            inset: 0,
-            
-            backgroundSize: "64px 64px",
-            opacity: 0.25,
-            maskImage:
-              "radial-gradient(ellipse at center, black 30%, transparent 80%)",
-            WebkitMaskImage:
-              "radial-gradient(ellipse at center, black 30%, transparent 80%)",
+            fontSize: "clamp(56px, 9vw, 132px)",
+            maxWidth: 980,
+            margin: 0,
+            fontWeight: 500,
+          }}
+        >
+          {t.hero.title_a}
+          <br />
+          <span style={{ color: "var(--accent)" }}>{t.hero.title_b}</span>
+        </h1>
+        <p
+          style={{
+            fontSize: "clamp(16px, 1.4vw, 20px)",
+            color: "var(--fg-dim)",
+            maxWidth: 620,
+            marginTop: 28,
+            lineHeight: 1.55,
+          }}
+        >
+          {t.hero.sub}
+        </p>
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            marginTop: 36,
+            flexWrap: "wrap",
+          }}
+        >
+          <Link to="/simulator" className="btn btn-primary">
+            {t.hero.cta_primary} <span style={{ fontSize: 16 }}>→</span>
+          </Link>
+          <a href="#solution" className="btn btn-ghost">
+            {t.hero.cta_ghost}
+          </a>
+        </div>
+      </div>
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: sceneIn,
+          transform: `translateY(${(1 - sceneIn) * 24}px)`,
+          transition: "opacity .15s linear, transform .15s linear",
+        }}
+      >
+        <RoadScene
+          scrollP={p}
+          detectionActive={detectionActive}
+          step={step}
+        />
+      </div>
+      {step >= 1 && <StepCaption step={step} lang={lang} />}
+      {step >= 1 && <ProgressDots step={step} />}
+      <div
+        aria-hidden
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: 28,
+          transform: "translateX(-50%)",
+          opacity: titleP * 0.8,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 10,
+          color: "var(--fg-muted)",
+        }}
+      >
+        <div
+          className="mono"
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+          }}
+        >
+          {t.hero.scroll}
+        </div>
+        <div
+          style={{
+            width: 1,
+            height: 36,
+            background: "var(--fg-muted)",
+            animation: "sf-scroll 1.6s ease-in-out infinite",
           }}
         />
-        <div
-          className="container"
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            opacity: titleP,
-            pointerEvents: titleP < 0.05 ? "none" : "auto",
-            zIndex: 3,
-          }}
-        >
-      
-          <h1
-            className="display"
-            style={{
-              fontSize: "clamp(56px, 9vw, 132px)",
-              maxWidth: 980,
-              margin: 0,
-              fontWeight: 500,
-            }}
-          >
-            {t.hero.title_a}
-            <br />
-            <span style={{ color: "var(--accent)" }}>{t.hero.title_b}</span>
-          </h1>
-          <p
-            style={{
-              fontSize: "clamp(16px, 1.4vw, 20px)",
-              color: "var(--fg-dim)",
-              maxWidth: 620,
-              marginTop: 28,
-              lineHeight: 1.55,
-            }}
-          >
-            {t.hero.sub}
-          </p>
-          <div
-            style={{
-              display: "flex",
-              gap: 12,
-              marginTop: 36,
-              flexWrap: "wrap",
-            }}
-          >
-            <a href="#solution" className="btn btn-primary">
-              {t.hero.cta_primary} <span style={{ fontSize: 16 }}>→</span>
-            </a>
-            <a href="#solution" className="btn btn-ghost">
-              {t.hero.cta_ghost}
-            </a>
-          </div>
-        </div>
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: sceneIn,
-            transform: `translateY(${(1 - sceneIn) * 24}px)`,
-            transition: "opacity .15s linear, transform .15s linear",
-          }}
-        >
-          <RoadScene
-            scrollP={p}
-            detectionActive={detectionActive}
-            step={step}
-          />
-        </div>
-        {step >= 1 && <StepCaption step={step} lang={lang} />}
-        {step >= 1 && <ProgressDots step={step} />}
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: 28,
-            transform: "translateX(-50%)",
-            opacity: titleP * 0.8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 10,
-            color: "var(--fg-muted)",
-          }}
-        >
-          <div
-            className="mono"
-            style={{
-              fontSize: 11,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-            }}
-          >
-            {t.hero.scroll}
-          </div>
-          <div
-            style={{
-              width: 1,
-              height: 36,
-              background: "var(--fg-muted)",
-              animation: "sf-scroll 1.6s ease-in-out infinite",
-            }}
-          />
-        </div>
-        <style>{`
-          @keyframes sf-scroll { 0%,100% { transform: scaleY(0.4); transform-origin: top; opacity: .3 } 50% { transform: scaleY(1); opacity: 1 } }
-          @keyframes sf-amb-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-1px) } }
-          @keyframes sf-light-pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
-        `}</style>
+      </div>
+      <style>{`
+        @keyframes sf-scroll { 0%,100% { transform: scaleY(0.4); transform-origin: top; opacity: .3 } 50% { transform: scaleY(1); opacity: 1 } }
+        @keyframes sf-amb-bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-1px) } }
+        @keyframes sf-light-pulse { 0%,100% { opacity: 1 } 50% { opacity: .55 } }
+      `}</style>
       </div>
     </section>
   );
