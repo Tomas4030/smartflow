@@ -1,5 +1,5 @@
-import { useT, Reveal } from "../shared";
-import { SF_I18N } from "../i18n";
+import { useT, Reveal } from "../../shared";
+import { SF_I18N } from "../../i18n";
 import { SectionHead } from "./SectionHead";
 
 export function Pricing() {

@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { useT, Reveal, useScrollProgress, clamp } from "../shared";
-import { SF_I18N } from "../i18n";
+import { useT, Reveal, useScrollProgress, clamp } from "../../shared";
+import { SF_I18N } from "../../i18n";
 import { SectionHead } from "./SectionHead";
 
 export function TimeSaved() {

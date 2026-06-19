@@ -1,4 +1,4 @@
-import { useT, Reveal } from "../shared";
+import { useT, Reveal } from "../../shared";
 import { SectionHead } from "./SectionHead";
 
 export function Team() {

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useT, Reveal } from "../shared";
+import { useT, Reveal } from "../../shared";
 
 export function Contact() {
   const [t] = useT();
