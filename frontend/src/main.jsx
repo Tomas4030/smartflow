@@ -14,6 +14,10 @@ import AdminApprovals from './pages/AdminApprovals'
 import AdminHistory from './pages/AdminHistory'
 import AdminMunicipalities from './pages/AdminMunicipalities'
 import AdminLoginPage from './pages/AdminLogin'
+import ClientRegister from './pages/ClientRegister'
+import ClientLogin from './pages/ClientLogin'
+import ClientProfile from './pages/ClientProfile'
+import ClientSOS from './pages/ClientSOS'
 import SimulatorPage from './pages/Simulator'
 
 function ProtectedRoute({ children }) {
@@ -65,6 +69,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="history" element={<AdminHistory />} />
           <Route path="municipalities" element={<AdminMunicipalities />} />
         </Route>
+
+        {/* Citizen SOS area */}
+        <Route path="/client/register" element={<ClientRegister />} />
+        <Route path="/client/login" element={<ClientLogin />} />
+        <Route path="/client/profile" element={<ClientProfile />} />
+        <Route path="/client/sos" element={<ClientSOS />} />
 
         <Route path="/simulator" element={<SimulatorPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

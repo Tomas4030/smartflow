@@ -154,7 +154,7 @@ export default function AdminMunicipalities() {
               <tr key={mun.id} style={{ borderBottom: "1px solid var(--hairline)" }}>
                 <td style={tdSty}><span style={{ fontWeight: 600, fontSize: 15 }}>{mun.name}</span></td>
                 <td style={tdSty}>{mun.district}</td>
-                <td style={tdSty} className="mono" style={{ ...tdSty, fontSize: 15, fontWeight: 500 }}>{mun.total}</td>
+                <td style={{ ...tdSty, fontSize: 15, fontWeight: 500 }}>{mun.total}</td>
                 <td style={tdSty}>{mun.pending > 0 ? <span style={{ color: "var(--amber)", fontWeight: 600, fontSize: 15 }}>{mun.pending}</span> : <span style={{ color: "var(--fg-muted)" }}>0</span>}</td>
                 <td style={tdSty}>
                   <div style={{ display: "flex", gap: 10 }}>
