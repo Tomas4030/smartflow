@@ -832,6 +832,34 @@ export function RaceTrack({
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+const MARKET_ICONS = [
+  /* camera scan */
+  <svg key="cam" width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="15" y="18" width="22" height="16" rx="3" stroke="currentColor" strokeWidth="1.6" fill="none"/>
+    <circle cx="26" cy="26" r="4.5" stroke="currentColor" strokeWidth="1.6" fill="none"/>
+    <circle cx="26" cy="26" r="1.5" fill="currentColor"/>
+    <path d="M4 12V8a4 4 0 0 1 4-4h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+    <path d="M48 12V8a4 4 0 0 0-4-4h-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+    <path d="M4 40v4a4 4 0 0 0 4 4h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+    <path d="M48 40v4a4 4 0 0 1-4 4h-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+  </svg>,
+  /* lightning bolt */
+  <svg key="bolt" width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="26" cy="26" r="20" stroke="currentColor" strokeWidth="1.6" fill="none"/>
+    <path d="M29 14l-8 14h7l-4 10 10-14h-7l2-10z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" fill="none"/>
+    <circle cx="38" cy="14" r="3" fill="currentColor" opacity="0.7"/>
+  </svg>,
+  /* shield check */
+  <svg key="shield" width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M26 6l18 7v12c0 10-8 18-18 21C16 43 8 35 8 25V13l18-7z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" fill="none"/>
+    <path d="M19 26l5 5 9-9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+  </svg>,
+];
+
+>>>>>>> 84f55f5 (feat: add SVG icons to market section cards)
 export function Market() {
   const [t] = useT();
   return (
@@ -874,6 +902,19 @@ export function Market() {
                       "radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--accent) 10%, transparent), transparent 50%)",
                   }}
                 />
+                {/* icon top-right */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 24,
+                    right: 24,
+                    color: "color-mix(in oklch, var(--accent) 45%, var(--fg-dim))",
+                    opacity: 0.6,
+                  }}
+                >
+                  {MARKET_ICONS[i]}
+                </div>
+
                 <div
                   className="tag"
                   style={{ alignSelf: "flex-start", position: "relative" }}
