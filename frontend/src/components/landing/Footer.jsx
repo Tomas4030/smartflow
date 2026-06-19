@@ -1,5 +1,5 @@
 import { useT } from "../../shared";
-import { Logomark } from "../../Logomark";
+import { Logomark } from "../Logomark";
 
 export function Footer() {
   const [t] = useT();
