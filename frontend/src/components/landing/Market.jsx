@@ -1,4 +1,4 @@
-import { useT, Reveal } from "../shared";
+import { useT, Reveal } from "../../shared";
 import { SectionHead } from "./SectionHead";
 
 const MARKET_ICONS = [

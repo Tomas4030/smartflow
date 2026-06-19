@@ -1,4 +1,4 @@
-import { useT, Reveal } from "../shared";
+import { useT, Reveal } from "../../shared";
 
 export function Compare() {
   const [t] = useT();
