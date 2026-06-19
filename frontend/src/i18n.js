@@ -17,9 +17,13 @@ export const SF_I18N = {
       scroll: "Desça para ver",
     },
     intro: {
-      eyebrow: "Pombal · 2024",
-      headline: "1h26m. O paciente não sobreviveu.",
-      body: "Cada 3 minutos sem tratamento reduz as hipóteses de sobrevivência. O percurso até ao hospital perde 15 minutos no trânsito. Não é logística. É uma falha de prioridade.",
+      eyebrow: "CASO REAL · POMBAL · 2024",
+      headline: "1h26m até chegar apoio clínico avançado.",
+      body: [
+        "No caso de Pombal, a primeira ambulância SIV — Suporte Imediato de Vida — chegou junto do utente 1h26m depois da primeira chamada para o 112.",
+        "Num enfarte, cada minuto reduz a margem de resposta. Este caso mostra como atrasos no sistema de emergência podem ter consequências graves.",
+        "A Smart Flow atua numa parte concreta deste problema: reduzir perdas de tempo nos cruzamentos, dando prioridade automática aos veículos de emergência quando mais importa.",
+      ],
     },
     problem: {
       eyebrow: "O PROBLEMA",
@@ -209,9 +213,13 @@ export const SF_I18N = {
       scroll: "Scroll to explore",
     },
     intro: {
-      eyebrow: "Pombal · 2024",
-      headline: "1h26m. The patient didn't make it.",
-      body: "Every 3 minutes without treatment, survival odds fall. A single trip to hospital can lose 15 minutes stuck in traffic. That's not a logistics problem. It's a matter of priority.",
+      eyebrow: "REAL CASE · POMBAL · 2024",
+      headline: "1h26m for advanced medical support to arrive.",
+      body: [
+        "In Pombal, the first SIV ambulance — an advanced life-support unit — took 1 hour and 26 minutes to reach the patient after the initial 112 call.",
+        "In a cardiac event, every minute narrows the window for recovery. This case shows how systemic delays in emergency response can have severe consequences.",
+        "SmartFlow tackles a specific part of this problem: cutting time lost at intersections by automatically clearing the way for emergency vehicles when it matters most.",
+      ],
     },
     problem: {
       eyebrow: "THE PROBLEM",

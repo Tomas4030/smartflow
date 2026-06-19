@@ -43,17 +43,30 @@ export function Intro() {
           </h2>
         </Reveal>
         <Reveal delay={160}>
-          <p
+          <div
             style={{
               marginTop: 36,
-              fontSize: 19,
-              lineHeight: 1.6,
-              color: "var(--fg-dim)",
+              display: "flex",
+              flexDirection: "column",
+              gap: 16,
               maxWidth: 760,
             }}
           >
-            {t.intro.body}
-          </p>
+            {t.intro.body.map((p, i) => (
+              <p
+                key={i}
+                style={{
+                  margin: 0,
+                  fontSize: i === 0 ? 19 : 16,
+                  lineHeight: 1.65,
+                  color: i === 2 ? "var(--fg)" : "var(--fg-dim)",
+                  fontWeight: i === 2 ? 450 : 400,
+                }}
+              >
+                {p}
+              </p>
+            ))}
+          </div>
         </Reveal>
       </div>
     </section>
