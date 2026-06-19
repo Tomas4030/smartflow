@@ -11,7 +11,7 @@ export function StatCards({ intersections = [], events = [] }) {
   const validEvents = (events || []).filter((e) => e.detectedAt);
 
   const thisMonth = validEvents.filter(
-    (e) => new Date(e.detectedAt) >= startOfThisMonth
+    (e) => new Date(e.detectedAt) >= startOfThisMonth,
   );
 
   const lastMonth = validEvents.filter((e) => {
