@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { Nav } from '../components/Nav'
 import { Hero } from '../components/Hero'
-import { Intro, Problem, Solution, SOSFeature, TimeSaved, Market, Roadmap, Compare, Pricing, Team, Contact, Footer } from '../components/Sections'
+import { Intro, Problem, Solution, SOSFeature, TimeSaved, Market, Roadmap, Compare, Pricing, Team, Contact, Footer } from '../components/landing'
 import { SupportChat } from '../components/SupportChat'
 
 // Free scroll through the Hero (drives its animation), then snap section-to-section.
