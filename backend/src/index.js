@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth");
 const municipalityRoutes = require("./routes/municipalities");
 const eventRoutes = require("./routes/events");
 const adminRoutes = require("./routes/admin");
+const citizenRoutes = require("./routes/citizens");
 const chatRoutes = require("./routes/chat");
 
 const { requireAuth } = require("./middleware/auth");
@@ -31,6 +32,7 @@ app.use("/api/municipalities", municipalityRoutes);
 app.use("/api/intersections", intersectionRoutes);
 app.use("/api/events", requireAuth, eventRoutes);
 app.use("/api/admin", requireAuth, adminRoutes);
+app.use("/api/citizens", citizenRoutes);
 app.use("/api/chat", chatRoutes);
 app.use((req, res) => {
   res.status(404).json({

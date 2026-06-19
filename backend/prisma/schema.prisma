@@ -47,6 +47,7 @@ model Intersection {
 
   municipality     Municipality      @relation(fields: [municipalityId], references: [id])
   detectionEvents  DetectionEvent[]
+  emergencyRequests EmergencyRequest[]
 
   @@map("intersections")
 }
@@ -54,7 +55,7 @@ model Intersection {
 model DetectionEvent {
   id             String    @id @default(uuid())
   intersectionId String    @map("intersection_id")
-  triggeredBy    String    @map("triggered_by") // camera | manual
+  triggeredBy    String    @map("triggered_by") // camera | manual | sos
   greenDurationS Int       @map("green_duration_s")
   detectedAt     DateTime  @default(now()) @map("detected_at")
   resolvedAt     DateTime? @map("resolved_at")
@@ -62,4 +63,45 @@ model DetectionEvent {
   intersection Intersection @relation(fields: [intersectionId], references: [id])
 
   @@map("detection_events")
+}
+
+model Citizen {
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  passwordHash   String   @map("password_hash")
+  phone          String?
+  address        String?
+  addressFloor   String?  @map("address_floor")
+  addressDoor    String?  @map("address_door")
+  lat            Decimal?
+  lng            Decimal?
+  age            Int?
+  bloodType      String?  @map("blood_type")
+  conditions     String?
+  allergies      String?
+  medication     String?
+  emergencyName  String?  @map("emergency_name")
+  emergencyPhone String?  @map("emergency_phone")
+  notes          String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  emergencies EmergencyRequest[]
+
+  @@map("citizens")
+}
+
+model EmergencyRequest {
+  id             String    @id @default(uuid())
+  citizenId      String    @map("citizen_id")
+  intersectionId String?   @map("intersection_id")
+  status         String    @default("simulated_call")
+  callTranscript String?   @map("call_transcript") @db.Text
+  createdAt      DateTime  @default(now()) @map("created_at")
+  resolvedAt     DateTime? @map("resolved_at")
+
+  citizen      Citizen       @relation(fields: [citizenId], references: [id])
+  intersection Intersection? @relation(fields: [intersectionId], references: [id])
+
+  @@map("emergency_requests")
 }

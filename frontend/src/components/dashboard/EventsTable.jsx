@@ -26,6 +26,7 @@ function TriggerBadge({ type }) {
     'Deteção Visual': { color: "var(--cyan)", bg: "color-mix(in oklch, var(--cyan) 10%, transparent)", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg> },
     'Ciclo Restaurado': { color: "var(--green)", bg: "color-mix(in oklch, var(--green) 10%, transparent)", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg> },
     'Falha de Sensor': { color: "var(--red)", bg: "color-mix(in oklch, var(--red) 10%, transparent)", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> },
+    'SOS Cidadão': { color: "var(--red)", bg: "color-mix(in oklch, var(--red) 14%, transparent)", icon: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
   }
   const s = map[type] || map['Deteção Visual']
   return (
@@ -77,7 +78,7 @@ export function EventsTable({ events }) {
           <tbody>
             {visible.map((e, i) => {
               const types = ['Deteção Visual', 'Ciclo Restaurado', 'Falha de Sensor']
-              const displayType = e.resolvedAt ? types[1] : (e.triggeredBy === 'camera' ? types[0] : (e._status === 'alerta' ? types[2] : types[0]))
+              const displayType = e.resolvedAt ? types[1] : (e.triggeredBy === 'sos' ? 'SOS Cidadão' : e.triggeredBy === 'camera' ? types[0] : (e._status === 'alerta' ? types[2] : types[0]))
               return (
                 <tr key={e.id} style={{ background: i % 2 === 0 ? "transparent" : "color-mix(in oklch, var(--surface) 20%, transparent)", transition: "background .15s" }} onMouseEnter={ev => ev.currentTarget.style.background = "color-mix(in oklch, var(--accent) 5%, transparent)"} onMouseLeave={ev => ev.currentTarget.style.background = i % 2 === 0 ? "transparent" : "color-mix(in oklch, var(--surface) 20%, transparent)"}>
                   <td style={{ ...tdSty, fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--fg-muted)", letterSpacing: "0.04em" }}>{e.id?.slice(0, 8).toUpperCase()}</td>

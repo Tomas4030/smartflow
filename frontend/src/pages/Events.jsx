@@ -248,7 +248,11 @@ export function EventsPage() {
                       <td style={{ padding: "13px 16px", fontSize: 13.5, color: "var(--fg)", maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {ev.intersection?.name || "Cruzamento"}
                       </td>
-                      <td style={{ padding: "13px 16px", fontSize: 13, color: "var(--fg-dim)", whiteSpace: "nowrap" }}>{ev.triggeredBy}</td>
+                      <td style={{ padding: "13px 16px", fontSize: 13, color: "var(--fg-dim)", whiteSpace: "nowrap" }}>
+                        {ev.triggeredBy === "sos" ? (
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, fontSize: 11, fontWeight: 600, background: "color-mix(in oklch, var(--red) 12%, transparent)", color: "var(--red)", border: "1px solid color-mix(in oklch, var(--red) 25%, transparent)" }}>🚨 SOS Cidadão</span>
+                        ) : ev.triggeredBy}
+                      </td>
                       <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--cyan)" }}>{ev.greenDurationS}s</td>
                       <td style={{ padding: "13px 16px", fontSize: 12.5, color: "var(--fg-dim)", whiteSpace: "nowrap" }}>{fmtDatetime(ev.detectedAt)}</td>
                       <td style={{ padding: "13px 16px", fontSize: 12.5, color: "var(--fg-muted)", whiteSpace: "nowrap" }}>{fmtDatetime(ev.resolvedAt)}</td>
