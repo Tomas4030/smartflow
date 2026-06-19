@@ -35,9 +35,18 @@ export const SF_I18N = {
       eyebrow: "SMARTFLOW · CRUZAMENTOS",
       title: "IA vê. Semáforo abre.",
       points: [
-        { t: "Deteção por IA", d: "Câmara reconhece sirene, luzes e silhueta. Sem GPS, sem app." },
-        { t: "Verde antes da chegada", d: "O cruzamento abre o eixo da ambulância antes de ela chegar." },
-        { t: "Trânsito normal em segundos", d: "Após a passagem, o ciclo regressa sem efeito-onda." },
+        {
+          t: "Deteção por IA",
+          d: "Câmara reconhece sirene, luzes e silhueta. Sem GPS, sem app.",
+        },
+        {
+          t: "Verde antes da chegada",
+          d: "O cruzamento abre o eixo da ambulância antes de ela chegar.",
+        },
+        {
+          t: "Trânsito normal em segundos",
+          d: "Após a passagem, o ciclo regressa sem efeito-onda.",
+        },
       ],
     },
     timesaved: {
@@ -49,9 +58,21 @@ export const SF_I18N = {
       eyebrow: "POR QUÊ NÓS",
       title: "Simples. Eficaz. Pronto.",
       cards: [
-        { v: "Plug & Play", l: "Instala num cruzamento. Funciona no mesmo dia.", k: "01" },
-        { v: "Zero Integração", l: "Sem app, sem GPS, sem frota. A câmara vê a ambulância.", k: "02" },
-        { v: "Albufeira · 2026", l: "Piloto real. Município real. Resultados reais.", k: "03" },
+        {
+          v: "Plug & Play",
+          l: "Instala num cruzamento. Funciona no mesmo dia.",
+          k: "01",
+        },
+        {
+          v: "Zero Integração",
+          l: "Sem app, sem GPS, sem frota. A câmara vê a ambulância.",
+          k: "02",
+        },
+        {
+          v: "Albufeira · 2026",
+          l: "Piloto real. Município real. Resultados reais.",
+          k: "03",
+        },
       ],
     },
     roadmap: {
@@ -59,7 +80,11 @@ export const SF_I18N = {
       title: "Pronto em 4 passos.",
       steps: [
         { y: "01", t: "Contacto", d: "Demo técnica ao teu município." },
-        { y: "02", t: "Avaliação", d: "Identificamos os cruzamentos prioritários." },
+        {
+          y: "02",
+          t: "Avaliação",
+          d: "Identificamos os cruzamentos prioritários.",
+        },
         { y: "03", t: "Piloto", d: "Instalação em 3 cruzamentos." },
         { y: "04", t: "Expansão", d: "Cobertura da rede completa." },
       ],
@@ -68,9 +93,17 @@ export const SF_I18N = {
       eyebrow: "COMPARAÇÃO",
       title: "Nós vs. o resto.",
       a_name: "Solução Tradicional",
-      a_pts: ["Corredores via GPS ou app", "Depende da localização do veículo", "Integração complexa com a frota"],
+      a_pts: [
+        "Corredores via GPS ou app",
+        "Depende da localização do veículo",
+        "Integração complexa com a frota",
+      ],
       b_name: "Smart Flow",
-      b_pts: ["IA visual — vê a ambulância", "Semáforo abre só quando necessário", "Instalação local, sem integração"],
+      b_pts: [
+        "IA visual — vê a ambulância",
+        "Semáforo abre só quando necessário",
+        "Instalação local, sem integração",
+      ],
     },
     pricing: {
       eyebrow: "PARA MUNICÍPIOS",
@@ -112,12 +145,35 @@ export const SF_I18N = {
       title: "Um botão. Uma vida.",
       sub: "Um clique ativa o 112, despacha uma ambulância e abre os cruzamentos no percurso.",
       flow: [
-        { step: "01", icon: "🚨", label: "SOS", title: "Prima o botão", body: "Uma confirmação. O sistema age imediatamente." },
-        { step: "02", icon: "📞", label: "112", title: "112 ativado", body: "Dados médicos e localização enviados automaticamente." },
-        { step: "03", icon: "🚑", label: "AMBULÂNCIA", title: "Ambulância a caminho", body: "Despachada e percurso calculado em tempo real." },
-        { step: "04", icon: "🟢", label: "SMARTFLOW", title: "Cruzamentos abertos", body: "Semáforos abertos antes da ambulância chegar." },
+        {
+          step: "01",
+          icon: "🚨",
+          label: "SOS",
+          title: "Prima o botão",
+          body: "Uma confirmação. O sistema age imediatamente.",
+        },
+        {
+          step: "02",
+          icon: "📞",
+          label: "112",
+          title: "112 ativado",
+          body: "Dados médicos e localização enviados automaticamente.",
+        },
+        {
+          step: "03",
+          icon: "🚑",
+          label: "AMBULÂNCIA",
+          title: "Ambulância a caminho",
+          body: "Despachada e percurso calculado em tempo real.",
+        },
+        {
+          step: "04",
+          icon: "🟢",
+          label: "SMARTFLOW",
+          title: "Cruzamentos abertos",
+          body: "Semáforos abertos antes da ambulância chegar.",
+        },
       ],
-      disclaimer: "Simulação académica. Não substitui o 112.",
     },
     sim: {
       back: "← Voltar à página",
@@ -181,9 +237,18 @@ export const SF_I18N = {
       eyebrow: "SMARTFLOW · INTERSECTIONS",
       title: "AI sees. Light opens.",
       points: [
-        { t: "AI detection", d: "Camera recognises siren, lights and silhouette. No GPS, no app." },
-        { t: "Green before arrival", d: "The intersection opens the ambulance's axis before it arrives." },
-        { t: "Traffic back in seconds", d: "Normal cycle resumes after the pass, no shockwave." },
+        {
+          t: "AI detection",
+          d: "Camera recognises siren, lights and silhouette. No GPS, no app.",
+        },
+        {
+          t: "Green before arrival",
+          d: "The intersection opens the ambulance's axis before it arrives.",
+        },
+        {
+          t: "Traffic back in seconds",
+          d: "Normal cycle resumes after the pass, no shockwave.",
+        },
       ],
     },
     timesaved: {
@@ -195,9 +260,21 @@ export const SF_I18N = {
       eyebrow: "WHY SMARTFLOW",
       title: "Simple. Effective. Ready.",
       cards: [
-        { v: "Plug & Play", l: "Install at one intersection. Works the same day.", k: "01" },
-        { v: "Zero Integration", l: "No app, no GPS, no fleet. The camera sees the ambulance.", k: "02" },
-        { v: "Albufeira · 2026", l: "Real pilot. Real municipality. Real results.", k: "03" },
+        {
+          v: "Plug & Play",
+          l: "Install at one intersection. Works the same day.",
+          k: "01",
+        },
+        {
+          v: "Zero Integration",
+          l: "No app, no GPS, no fleet. The camera sees the ambulance.",
+          k: "02",
+        },
+        {
+          v: "Albufeira · 2026",
+          l: "Real pilot. Real municipality. Real results.",
+          k: "03",
+        },
       ],
     },
     roadmap: {
@@ -214,9 +291,17 @@ export const SF_I18N = {
       eyebrow: "COMPARISON",
       title: "Us vs. the rest.",
       a_name: "Traditional System",
-      a_pts: ["Emergency corridors via GPS or app", "Depends on vehicle location", "Complex fleet integration"],
+      a_pts: [
+        "Emergency corridors via GPS or app",
+        "Depends on vehicle location",
+        "Complex fleet integration",
+      ],
       b_name: "Smart Flow",
-      b_pts: ["AI visual — sees the ambulance", "Light opens only when needed", "Local install, no integration"],
+      b_pts: [
+        "AI visual — sees the ambulance",
+        "Light opens only when needed",
+        "Local install, no integration",
+      ],
     },
     pricing: {
       eyebrow: "FOR MUNICIPALITIES",
@@ -258,12 +343,35 @@ export const SF_I18N = {
       title: "One button. One life.",
       sub: "One tap activates 112, dispatches an ambulance, and opens intersections along the route.",
       flow: [
-        { step: "01", icon: "🚨", label: "SOS", title: "Press the button", body: "One confirmation. The system acts immediately." },
-        { step: "02", icon: "📞", label: "112", title: "112 activated", body: "Medical data and location sent automatically." },
-        { step: "03", icon: "🚑", label: "AMBULANCE", title: "Ambulance en route", body: "Dispatched and route calculated in real time." },
-        { step: "04", icon: "🟢", label: "SMARTFLOW", title: "Lights open", body: "Intersections cleared before the ambulance arrives." },
+        {
+          step: "01",
+          icon: "🚨",
+          label: "SOS",
+          title: "Press the button",
+          body: "One confirmation. The system acts immediately.",
+        },
+        {
+          step: "02",
+          icon: "📞",
+          label: "112",
+          title: "112 activated",
+          body: "Medical data and location sent automatically.",
+        },
+        {
+          step: "03",
+          icon: "🚑",
+          label: "AMBULANCE",
+          title: "Ambulance en route",
+          body: "Dispatched and route calculated in real time.",
+        },
+        {
+          step: "04",
+          icon: "🟢",
+          label: "SMARTFLOW",
+          title: "Lights open",
+          body: "Intersections cleared before the ambulance arrives.",
+        },
       ],
-      disclaimer: "Academic simulation. Does not replace 112.",
     },
     sim: {
       back: "← Back to site",
@@ -290,4 +398,4 @@ export const SF_I18N = {
     },
     footer_note: "Smart Flow · 2026",
   },
-}
+};

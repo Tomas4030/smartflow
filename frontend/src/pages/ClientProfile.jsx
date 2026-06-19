@@ -332,39 +332,18 @@ export default function ClientProfile() {
               border: "1px solid var(--hairline)",
               borderRadius: "var(--radius)",
               background: "var(--bg-2)",
-              overflow: "hidden",
             }}
           >
-            <div
-              style={{
-                padding: "22px 22px 18px",
-                borderBottom: "1px solid var(--hairline)",
-              }}
-            >
-              <h2
-                style={{
-                  margin: "0 0 6px",
-                  fontSize: 18,
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 600,
-                }}
-              >
+            <div style={{ padding: "22px 22px 18px", borderBottom: "1px solid var(--hairline)" }}>
+              <h2 style={{ margin: "0 0 6px", fontSize: 18, fontFamily: "var(--font-display)", fontWeight: 600 }}>
                 {currentSection.title}
               </h2>
-
-              <p
-                style={{
-                  margin: 0,
-                  color: "var(--fg-muted)",
-                  fontSize: 13,
-                  lineHeight: 1.5,
-                }}
-              >
+              <p style={{ margin: 0, color: "var(--fg-muted)", fontSize: 13, lineHeight: 1.5 }}>
                 {currentSection.description}
               </p>
             </div>
 
-            <div style={{ padding: 22 }}>
+            <div style={{ padding: 22 }} key={activeSection}>
               {activeSection === "personal" && (
                 <div
                   style={{ display: "flex", flexDirection: "column", gap: 18 }}
