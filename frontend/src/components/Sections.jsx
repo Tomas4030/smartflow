@@ -1153,8 +1153,10 @@ export function CompareSide({ name, pts, dim, highlight }) {
                 background: highlight ? "var(--accent)" : "color-mix(in oklch, #e53e3e 15%, transparent)",
                 border: highlight ? "0" : "1px solid #e53e3e",
                 color: highlight ? "#fff" : "#e53e3e",
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: 700,
+                lineHeight: 1,
+                paddingBottom: 1,
               }}
             >
               {highlight ? "✓" : "−"}
