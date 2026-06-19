@@ -1150,14 +1150,14 @@ export function CompareSide({ name, pts, dim, highlight }) {
                 display: "grid",
                 placeItems: "center",
                 marginTop: 2,
-                background: highlight ? "var(--accent)" : "transparent",
-                border: highlight ? "0" : "1px solid var(--hairline-2)",
-                color: highlight ? "#fff" : "var(--fg-muted)",
-                fontSize: 11,
-                fontWeight: 600,
+                background: highlight ? "var(--accent)" : "color-mix(in oklch, #e53e3e 15%, transparent)",
+                border: highlight ? "0" : "1px solid #e53e3e",
+                color: highlight ? "#fff" : "#e53e3e",
+                fontSize: 13,
+                fontWeight: 700,
               }}
             >
-              {highlight ? "✓" : "○"}
+              {highlight ? "✓" : "−"}
             </span>
             <div>
               <div style={{ fontWeight: 500, fontSize: 14, marginBottom: 3, color: dim ? "var(--fg-dim)" : "var(--fg)" }}>{p.t}</div>
