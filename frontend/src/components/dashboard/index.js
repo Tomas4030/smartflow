@@ -1,5 +1,5 @@
-export { Ic } from './Icons'
-export { DashboardNav } from './DashboardNav'
-export { StatCards } from './StatCards'
-export { MonitoringMap } from './MonitoringMap'
-export { EventsTable } from './EventsTable'
+export { Ic } from "./Icons";
+export { DashboardNav } from "./DashboardNav";
+export { StatCards } from "./StatCards";
+export { MonitoringMap } from "./MonitoringMap";
+export { EventsTable } from "./EventsTable";
