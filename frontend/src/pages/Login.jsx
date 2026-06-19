@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useTheme } from '../shared'
 import { AUTH } from '../auth'
 import { Logomark } from '../components/Logomark'
@@ -306,6 +306,13 @@ export default function LoginPage() {
               letterSpacing: "0.01em", userSelect: "all",
             }}>
               dev — admin@albufeira.pt / password
+            </p>
+
+            <p style={{ marginTop: 24, textAlign: "center", fontSize: 13, color: "var(--fg-muted)" }}>
+              És um cidadão?{" "}
+              <Link to="/client/login" style={{ color: "var(--accent)", fontWeight: 500, textDecoration: "none" }}>
+                Aceder ao SmartFlow SOS
+              </Link>
             </p>
 
           </div>

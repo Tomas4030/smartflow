@@ -123,7 +123,7 @@ export function Nav() {
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <LangToggle lang={lang} setLang={setLang} />
           <Link
-            to="/login"
+            to="/client/login"
             className="btn btn-primary"
             style={{ padding: "10px 16px" }}
           >
