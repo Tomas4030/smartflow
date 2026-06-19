@@ -40,12 +40,11 @@ export function Nav() {
         </a>
 
         <nav style={{ display: "flex", gap: 4, alignItems: "center" }} className="sf-nav-links">
-          <a href="#problem" style={linkSty}>{t.nav.problem}</a>
-          <a href="#solution" style={linkSty}>{t.nav.solution}</a>
-          <a href="#market" style={linkSty}>{t.nav.market}</a>
-          <a href="#roadmap" style={linkSty}>{t.nav.roadmap}</a>
-          <a href="#team" style={linkSty}>{t.nav.team}</a>
-          <Link to="/simulator" style={{ ...linkSty, color: "var(--accent)" }}>{t.nav.simulator}</Link>
+          <a href="#solution" style={linkSty}>{t.nav.product}</a>
+          <a href="#sos" style={linkSty}>{t.nav.how}</a>
+          <a href="#market" style={linkSty}>{t.nav.why}</a>
+          <a href="#roadmap" style={linkSty}>{t.nav.sos}</a>
+          <a href="#contact" style={linkSty}>{t.nav.cta}</a>
         </nav>
 
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
