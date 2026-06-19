@@ -60,6 +60,13 @@ export default function ClientLogin() {
           <p style={{ textAlign: "center", fontSize: 13, color: "var(--fg-muted)", margin: 0 }}>
             Não tem conta? <Link to="/client/register" style={{ color: "var(--accent)", fontWeight: 500 }}>Registar</Link>
           </p>
+
+          <p style={{ marginTop: 16, textAlign: "center", fontSize: 13, color: "var(--fg-muted)", margin: "16px 0 0" }}>
+            És um município?{" "}
+            <Link to="/login" style={{ color: "var(--accent)", fontWeight: 500, textDecoration: "none" }}>
+              Aceder ao painel municipal
+            </Link>
+          </p>
         </form>
       </main>
     </div>

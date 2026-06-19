@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useT, Reveal } from "../../shared";
 
 export function SOSFeature() {
@@ -175,6 +176,21 @@ export function SOSFeature() {
             </Reveal>
           ))}
         </div>
+
+        <Reveal delay={200}>
+          <div style={{ marginTop: 48, display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+            <Link to="/client/register" className="btn btn-primary">
+              Registar no SOS →
+            </Link>
+            <Link
+              to="/client/login"
+              style={{ fontSize: 13, color: "var(--fg-dim)", textDecoration: "none", display: "flex", alignItems: "center", gap: 6 }}
+            >
+              Já tens conta?{" "}
+              <span style={{ color: "var(--accent)", fontWeight: 500 }}>Entrar</span>
+            </Link>
+          </div>
+        </Reveal>
       </div>
 
       <style>{`
