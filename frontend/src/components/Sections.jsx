@@ -1140,35 +1140,29 @@ export function CompareSide({ name, pts, dim, highlight }) {
         }}
       >
         {pts.map((p, i) => (
-          <li
-            key={i}
-            style={{
-              display: "flex",
-              gap: 14,
-              alignItems: "flex-start",
-              color: dim ? "var(--fg-dim)" : "var(--fg)",
-              fontSize: 15,
-              lineHeight: 1.45,
-            }}
-          >
+          <li key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
             <span
               style={{
                 flexShrink: 0,
-                width: 18,
-                height: 18,
+                width: 20,
+                height: 20,
                 borderRadius: "50%",
                 display: "grid",
                 placeItems: "center",
-                marginTop: 1,
+                marginTop: 2,
                 background: highlight ? "var(--accent)" : "transparent",
                 border: highlight ? "0" : "1px solid var(--hairline-2)",
-                color: "#fff",
+                color: highlight ? "#fff" : "var(--fg-muted)",
                 fontSize: 11,
+                fontWeight: 600,
               }}
             >
-              {highlight ? "✓" : "·"}
+              {highlight ? "✓" : "○"}
             </span>
-            <span>{p}</span>
+            <div>
+              <div style={{ fontWeight: 500, fontSize: 14, marginBottom: 3, color: dim ? "var(--fg-dim)" : "var(--fg)" }}>{p.t}</div>
+              <div style={{ fontSize: 13, color: "var(--fg-muted)", lineHeight: 1.5 }}>{p.d}</div>
+            </div>
           </li>
         ))}
       </ul>
