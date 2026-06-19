@@ -927,100 +927,96 @@ export function Roadmap() {
           <SectionHead eyebrow={t.roadmap.eyebrow} title={t.roadmap.title} />
         </Reveal>
 
-        <div
-          style={{
-            position: "relative",
-            marginTop: 40,
-            maxWidth: 820,
-          }}
-        >
-          {/* Linha atrás das bolas */}
-          <div
-            aria-hidden
-            style={{
-              position: "absolute",
-              left: 24,
-              top: 24,
-              bottom: 24,
-              width: 1,
-              background:
-                "linear-gradient(180deg, transparent, var(--accent) 10%, var(--accent) 85%, transparent)",
-              zIndex: 0,
-            }}
-          />
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 36,
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            {t.roadmap.steps.map((s, i) => (
-              <Reveal key={i} delay={i * 70}>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: 28,
-                    alignItems: "flex-start",
-                    position: "relative",
-                  }}
-                >
-                  <div
-                    style={{
-                      flexShrink: 0,
-                      width: 48,
-                      height: 48,
-                      borderRadius: "50%",
-                      border: "1px solid var(--accent)",
-                      background: "var(--bg)",
-                      display: "grid",
-                      placeItems: "center",
-                      color: "var(--accent)",
-                      fontFamily: "var(--font-mono)",
-                      fontSize: 11,
-                      letterSpacing: "0.08em",
-                      boxShadow:
-                        "0 0 24px color-mix(in oklch, var(--accent) 35%, transparent)",
-                      position: "relative",
-                      zIndex: 2,
-                    }}
-                  >
-                    {s.y}
-                  </div>
-
-                  <div style={{ paddingTop: 8 }}>
-                    <h3
-                      className="display"
+        <div className="sf-roadmap-grid" style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 64, alignItems: "start", marginTop: 40 }}>
+          {/* Timeline */}
+          <div style={{ position: "relative" }}>
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                left: 24,
+                top: 24,
+                bottom: 24,
+                width: 1,
+                background: "linear-gradient(180deg, transparent, var(--accent) 10%, var(--accent) 85%, transparent)",
+                zIndex: 0,
+              }}
+            />
+            <div style={{ display: "flex", flexDirection: "column", gap: 36, position: "relative", zIndex: 1 }}>
+              {t.roadmap.steps.map((s, i) => (
+                <Reveal key={i} delay={i * 70}>
+                  <div style={{ display: "flex", gap: 28, alignItems: "flex-start", position: "relative" }}>
+                    <div
                       style={{
-                        fontSize: 24,
-                        fontWeight: 500,
-                        margin: 0,
-                        marginBottom: 6,
+                        flexShrink: 0,
+                        width: 48,
+                        height: 48,
+                        borderRadius: "50%",
+                        border: "1px solid var(--accent)",
+                        background: "var(--bg)",
+                        display: "grid",
+                        placeItems: "center",
+                        color: "var(--accent)",
+                        fontFamily: "var(--font-mono)",
+                        fontSize: 11,
+                        letterSpacing: "0.08em",
+                        boxShadow: "0 0 24px color-mix(in oklch, var(--accent) 35%, transparent)",
+                        position: "relative",
+                        zIndex: 2,
                       }}
                     >
-                      {s.t}
-                    </h3>
-
-                    <p
-                      style={{
-                        margin: 0,
-                        color: "var(--fg-dim)",
-                        lineHeight: 1.55,
-                        fontSize: 15,
-                        maxWidth: 640,
-                      }}
-                    >
-                      {s.d}
-                    </p>
+                      {s.y}
+                    </div>
+                    <div style={{ paddingTop: 8 }}>
+                      <h3 className="display" style={{ fontSize: 24, fontWeight: 500, margin: 0, marginBottom: 6 }}>{s.t}</h3>
+                      <p style={{ margin: 0, color: "var(--fg-dim)", lineHeight: 1.55, fontSize: 15 }}>{s.d}</p>
+                    </div>
                   </div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              ))}
+            </div>
           </div>
+
+          {/* Pilot panel */}
+          <Reveal delay={100}>
+            <div
+              style={{
+                padding: 28,
+                border: "1px solid var(--accent)",
+                borderRadius: "var(--radius-lg)",
+                background: "color-mix(in oklch, var(--accent) 6%, var(--surface))",
+                position: "sticky",
+                top: 96,
+              }}
+            >
+              <div className="mono" style={{ fontSize: 10, letterSpacing: "0.18em", color: "var(--accent)", marginBottom: 16 }}>
+                {t.roadmap.panel_label}
+              </div>
+              <div className="display" style={{ fontSize: 26, fontWeight: 500, marginBottom: 20 }}>
+                {t.roadmap.panel_city}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 28 }}>
+                {t.roadmap.panel_pts.map((pt, i) => (
+                  <div key={i} style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13, color: "var(--fg-dim)" }}>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: i < 2 ? "var(--green)" : "var(--accent)", flexShrink: 0, boxShadow: `0 0 8px ${i < 2 ? "var(--green)" : "var(--accent)"}` }} />
+                    {pt}
+                  </div>
+                ))}
+              </div>
+              <a
+                href="mailto:smartflow@gmail.com"
+                className="btn btn-primary"
+                style={{ display: "block", textAlign: "center" }}
+              >
+                {t.roadmap.panel_cta} →
+              </a>
+            </div>
+          </Reveal>
         </div>
+
+        <style>{`
+          @media (max-width: 860px) { .sf-roadmap-grid { grid-template-columns: 1fr !important; } }
+        `}</style>
       </div>
     </section>
   );
@@ -1052,11 +1048,12 @@ export function Compare() {
 
       <div className="container" style={{ position: "relative" }}>
         <Reveal>
-          <SectionHead
-            eyebrow={t.compare.eyebrow}
-            title={` ${t.compare.a_name} vs. ${t.compare.b_name}`}
-            align="center"
-          />
+          <div style={{ textAlign: "center", marginBottom: 56 }}>
+            <div className="eyebrow" style={{ marginBottom: 16 }}>{t.compare.eyebrow}</div>
+            <h2 className="display" style={{ fontSize: "clamp(22px, 2.8vw, 38px)", margin: 0, fontWeight: 500 }}>
+              {t.compare.title}
+            </h2>
+          </div>
         </Reveal>
 
         <div
@@ -1071,32 +1068,24 @@ export function Compare() {
             borderRadius: "var(--radius-lg)",
             overflow: "hidden",
             background: "var(--surface)",
-            boxShadow:
-              "0 30px 90px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.04)",
+            boxShadow: "0 30px 90px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.04)",
           }}
         >
-          <Reveal>
-            <CompareSide name={t.compare.a_name} pts={t.compare.a_pts} dim />
+          <Reveal delay={120}>
+            <CompareSide name={t.compare.b_name} pts={t.compare.b_pts} highlight />
           </Reveal>
 
-          <Reveal delay={120}>
-            <CompareSide
-              name={t.compare.b_name}
-              pts={t.compare.b_pts}
-              highlight
-            />
+          <Reveal>
+            <CompareSide name={t.compare.a_name} pts={t.compare.a_pts} dim />
           </Reveal>
         </div>
 
         <style>{`
           @media (max-width: 760px) {
-            .sf-compare-grid {
-              grid-template-columns: 1fr !important;
-            }
-
-            .sf-compare-grid > *:first-child > div {
+            .sf-compare-grid { grid-template-columns: 1fr !important; }
+            .sf-compare-grid > *:last-child > div {
               border-right: 0 !important;
-              border-bottom: 1px solid var(--hairline) !important;
+              border-top: 1px solid var(--hairline) !important;
             }
           }
         `}</style>
@@ -1735,8 +1724,6 @@ export function SOSFeature() {
             </Reveal>
           ))}
         </div>
-
-        
       </div>
 
       <style>{`

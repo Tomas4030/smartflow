@@ -11,7 +11,7 @@ export const SF_I18N = {
     hero: {
       title_a: "Cada segundo",
       title_b: "salva uma vida.",
-      sub: "IA que deteta ambulâncias e abre semáforos — em tempo real.",
+      sub: "IA que deteta ambulâncias e abre semáforos em tempo real.",
       cta_primary: "Ver simulação",
       cta_ghost: "Como funciona",
       scroll: "Desça para ver",
@@ -19,7 +19,7 @@ export const SF_I18N = {
     intro: {
       eyebrow: "Pombal · 2024",
       headline: "1h26m. O paciente não sobreviveu.",
-      body: "Cada 3 minutos sem tratamento reduz as hipóteses de sobrevivência. O percurso até ao hospital perde 15 minutos no trânsito. Não é logística — é uma falha de prioridade.",
+      body: "Cada 3 minutos sem tratamento reduz as hipóteses de sobrevivência. O percurso até ao hospital perde 15 minutos no trânsito. Não é logística. É uma falha de prioridade.",
     },
     problem: {
       eyebrow: "O PROBLEMA",
@@ -56,23 +56,11 @@ export const SF_I18N = {
     },
     market: {
       eyebrow: "POR QUÊ NÓS",
-      title: "Simples. Eficaz. Pronto.",
+      title: "O que nos diferencia.",
       cards: [
-        {
-          v: "Plug & Play",
-          l: "Instala num cruzamento. Funciona no mesmo dia.",
-          k: "01",
-        },
-        {
-          v: "Zero Integração",
-          l: "Sem app, sem GPS, sem frota. A câmara vê a ambulância.",
-          k: "02",
-        },
-        {
-          v: "Albufeira · 2026",
-          l: "Piloto real. Município real. Resultados reais.",
-          k: "03",
-        },
+        { v: "Sem GPS", l: "A câmara vê a ambulância. Zero integração de frota.", k: "01" },
+        { v: "Plug & Play", l: "Instalação num cruzamento. Operacional no mesmo dia.", k: "02" },
+        { v: "Piloto Real", l: "Albufeira 2026. Validação com proteção civil.", k: "03" },
       ],
     },
     roadmap: {
@@ -80,14 +68,14 @@ export const SF_I18N = {
       title: "Pronto em 4 passos.",
       steps: [
         { y: "01", t: "Contacto", d: "Demo técnica ao teu município." },
-        {
-          y: "02",
-          t: "Avaliação",
-          d: "Identificamos os cruzamentos prioritários.",
-        },
+        { y: "02", t: "Avaliação", d: "Identificamos os cruzamentos prioritários." },
         { y: "03", t: "Piloto", d: "Instalação em 3 cruzamentos." },
         { y: "04", t: "Expansão", d: "Cobertura da rede completa." },
       ],
+      panel_label: "MUNICÍPIO PILOTO",
+      panel_city: "Albufeira · 2026",
+      panel_pts: ["3 cruzamentos instalados", "Validação com proteção civil", "Demo em 2 semanas"],
+      panel_cta: "Agendar Demo",
     },
     compare: {
       eyebrow: "COMPARAÇÃO",
@@ -100,7 +88,7 @@ export const SF_I18N = {
       ],
       b_name: "Smart Flow",
       b_pts: [
-        "IA visual — vê a ambulância",
+        "Deteção visual por IA",
         "Semáforo abre só quando necessário",
         "Instalação local, sem integração",
       ],
@@ -213,7 +201,7 @@ export const SF_I18N = {
     hero: {
       title_a: "Every second",
       title_b: "saves a life.",
-      sub: "AI that spots ambulances and opens lights — in real time.",
+      sub: "AI that spots ambulances and opens lights in real time.",
       cta_primary: "See simulation",
       cta_ghost: "How it works",
       scroll: "Scroll to see",
@@ -221,7 +209,7 @@ export const SF_I18N = {
     intro: {
       eyebrow: "Pombal · 2024",
       headline: "1h26m. The patient didn't make it.",
-      body: "Every 3 minutes without treatment, survival odds drop. The trip to hospital loses 15 minutes to traffic. Not logistics — a priority failure.",
+      body: "Every 3 minutes without treatment, survival odds drop. The trip to hospital loses 15 minutes to traffic. Not logistics. A priority failure.",
     },
     problem: {
       eyebrow: "THE PROBLEM",
@@ -258,23 +246,11 @@ export const SF_I18N = {
     },
     market: {
       eyebrow: "WHY SMARTFLOW",
-      title: "Simple. Effective. Ready.",
+      title: "What sets us apart.",
       cards: [
-        {
-          v: "Plug & Play",
-          l: "Install at one intersection. Works the same day.",
-          k: "01",
-        },
-        {
-          v: "Zero Integration",
-          l: "No app, no GPS, no fleet. The camera sees the ambulance.",
-          k: "02",
-        },
-        {
-          v: "Albufeira · 2026",
-          l: "Real pilot. Real municipality. Real results.",
-          k: "03",
-        },
+        { v: "No GPS", l: "The camera sees the ambulance. Zero fleet integration.", k: "01" },
+        { v: "Plug & Play", l: "Install at one intersection. Operational the same day.", k: "02" },
+        { v: "Real Pilot", l: "Albufeira 2026. Validation with civil protection.", k: "03" },
       ],
     },
     roadmap: {
@@ -286,6 +262,10 @@ export const SF_I18N = {
         { y: "03", t: "Pilot", d: "Installation at 3 intersections." },
         { y: "04", t: "Expansion", d: "Full network coverage." },
       ],
+      panel_label: "PILOT MUNICIPALITY",
+      panel_city: "Albufeira · 2026",
+      panel_pts: ["3 intersections installed", "Validation with civil protection", "Demo in 2 weeks"],
+      panel_cta: "Schedule Demo",
     },
     compare: {
       eyebrow: "COMPARISON",
@@ -298,7 +278,7 @@ export const SF_I18N = {
       ],
       b_name: "Smart Flow",
       b_pts: [
-        "AI visual — sees the ambulance",
+        "AI visual detection",
         "Light opens only when needed",
         "Local install, no integration",
       ],
