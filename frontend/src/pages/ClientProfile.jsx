@@ -1,6 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Logomark } from "../components/Logomark";
@@ -200,20 +206,26 @@ export default function ClientProfile() {
         address.replace(/\d+/g, "").replace(/,\s*,/g, ",").trim(), // remove all numbers
       ];
       for (const q of queries) {
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + " Portugal")}&limit=1`);
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q + " Portugal")}&limit=1`,
+        );
         const data = await res.json();
         if (data.length > 0) {
           const lat = parseFloat(data[0].lat);
           const lng = parseFloat(data[0].lon);
           handleChange("lat", lat);
           // Need to set lng separately since handleChange only sets one at a time
-          setForm(f => ({ ...f, lat, lng }));
+          setForm((f) => ({ ...f, lat, lng }));
           setSaved(false);
           return;
         }
       }
-      alert("Morada não encontrada. Tente simplificar ou clique diretamente no mapa.");
-    } catch (e) { console.error("Geocode failed", e); }
+      alert(
+        "Morada não encontrada. Tente simplificar ou clique diretamente no mapa.",
+      );
+    } catch (e) {
+      console.error("Geocode failed", e);
+    }
   }
 
   if (loading) {
@@ -273,7 +285,7 @@ export default function ClientProfile() {
                 margin: "0 0 6px",
               }}
             >
-              PERFIL MÉDICO -  Os seus dados
+              PERFIL MÉDICO - Os seus dados
             </h3>
 
             <p
@@ -354,7 +366,9 @@ export default function ClientProfile() {
 
             <div style={{ padding: 22 }}>
               {activeSection === "personal" && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                <div
+                  style={{ display: "flex", flexDirection: "column", gap: 18 }}
+                >
                   <div style={gridStyle}>
                     <Field
                       label="Nome"
@@ -375,7 +389,12 @@ export default function ClientProfile() {
                     />
                   </div>
 
-                  <div style={{ borderTop: "1px solid var(--hairline)", paddingTop: 18 }}>
+                  <div
+                    style={{
+                      borderTop: "1px solid var(--hairline)",
+                      paddingTop: 18,
+                    }}
+                  >
                     <div style={gridStyle}>
                       <Field
                         label="Morada / Rua"
@@ -383,13 +402,23 @@ export default function ClientProfile() {
                         onChange={(value) => handleChange("address", value)}
                         placeholder="Rua Exemplo, nº 10, Faro"
                         full
-                        onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); geocodeAddress(form.address); } }}
-                        onBlur={() => { if (form.address.length > 3) geocodeAddress(form.address); }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            geocodeAddress(form.address);
+                          }
+                        }}
+                        onBlur={() => {
+                          if (form.address.length > 3)
+                            geocodeAddress(form.address);
+                        }}
                       />
                       <Field
                         label="Andar"
                         value={form.addressFloor}
-                        onChange={(value) => handleChange("addressFloor", value)}
+                        onChange={(value) =>
+                          handleChange("addressFloor", value)
+                        }
                         placeholder="Ex: 3º Esq."
                       />
                       <Field
@@ -402,16 +431,35 @@ export default function ClientProfile() {
 
                     <div style={{ marginTop: 14 }}>
                       <Label>Localização no mapa</Label>
-                      <div style={{ marginTop: 8, borderRadius: "var(--radius)", overflow: "hidden", border: "1px solid var(--hairline)", height: 280 }}>
+                      <div
+                        style={{
+                          marginTop: 8,
+                          borderRadius: "var(--radius)",
+                          overflow: "hidden",
+                          border: "1px solid var(--hairline)",
+                          height: 280,
+                        }}
+                      >
                         <LocationPicker
                           lat={form.lat}
                           lng={form.lng}
-                          onSelect={(lat, lng) => { handleChange("lat", lat); handleChange("lng", lng); }}
+                          onSelect={(lat, lng) => {
+                            handleChange("lat", lat);
+                            handleChange("lng", lng);
+                          }}
                         />
                       </div>
                       {form.lat && form.lng && (
-                        <div className="mono" style={{ fontSize: 11, color: "var(--fg-muted)", marginTop: 8 }}>
-                          📍 {Number(form.lat).toFixed(5)}, {Number(form.lng).toFixed(5)}
+                        <div
+                          className="mono"
+                          style={{
+                            fontSize: 11,
+                            color: "var(--fg-muted)",
+                            marginTop: 8,
+                          }}
+                        >
+                          📍 {Number(form.lat).toFixed(5)},{" "}
+                          {Number(form.lng).toFixed(5)}
                         </div>
                       )}
                     </div>
@@ -669,7 +717,16 @@ function Alert({ type, children }) {
   );
 }
 
-function Field({ label, value, onChange, placeholder, type = "text", full, onKeyDown, onBlur }) {
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+  full,
+  onKeyDown,
+  onBlur,
+}) {
   return (
     <div
       style={{
@@ -750,19 +807,32 @@ function LocationPicker({ lat, lng, onSelect }) {
   });
 
   function MapClickHandler() {
-    useMapEvents({ click(e) { onSelect(e.latlng.lat, e.latlng.lng); } });
+    useMapEvents({
+      click(e) {
+        onSelect(e.latlng.lat, e.latlng.lng);
+      },
+    });
     return null;
   }
 
   function FlyTo({ lat, lng }) {
     const map = useMap();
-    useEffect(() => { if (lat && lng) map.flyTo([lat, lng], 16, { duration: 1 }); }, [lat, lng]);
+    useEffect(() => {
+      if (lat && lng) map.flyTo([lat, lng], 16, { duration: 1 });
+    }, [lat, lng]);
     return null;
   }
 
   return (
-    <MapContainer center={center} zoom={lat && lng ? 16 : 12} style={{ height: "100%", width: "100%" }}>
-      <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <MapContainer
+      center={center}
+      zoom={lat && lng ? 16 : 12}
+      style={{ height: "100%", width: "100%" }}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
       <MapClickHandler />
       <FlyTo lat={lat} lng={lng} />
       {lat && lng && <Marker position={[lat, lng]} icon={markerIcon} />}
