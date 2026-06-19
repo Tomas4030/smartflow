@@ -58,9 +58,9 @@ export const SF_I18N = {
       eyebrow: "POR QUÊ NÓS",
       title: "O que nos diferencia.",
       cards: [
-        { v: "Sem GPS", l: "A câmara vê a ambulância. Zero integração de frota.", k: "01" },
-        { v: "Plug & Play", l: "Instalação num cruzamento. Operacional no mesmo dia.", k: "02" },
-        { v: "Piloto Real", l: "Albufeira 2026. Validação com proteção civil.", k: "03" },
+        { v: "Sem GPS nem apps", l: "A deteção é feita por visão computacional no próprio cruzamento. Não depende da localização enviada pelos veículos.", k: "01" },
+        { v: "Instalação Plug & Play", l: "Instala-se apenas nos cruzamentos definidos pelo município e fica operacional rapidamente, sem integrações complexas.", k: "02" },
+        { v: "Piloto no terreno", l: "Projeto-piloto em Albufeira, com validação conjunta com a Proteção Civil e foco numa aplicação real.", k: "03" },
       ],
     },
     roadmap: {
