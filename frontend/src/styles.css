@@ -39,7 +39,19 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+
+section {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Hero is scroll-driven (360vh + sticky child) — opt it out of flex centering */
+section#top {
+  min-height: 0;
+  display: block;
+}
 body {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none; /* IE 10 and IE 11 */

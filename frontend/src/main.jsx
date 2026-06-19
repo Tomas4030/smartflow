@@ -18,6 +18,7 @@ import ClientRegister from './pages/ClientRegister'
 import ClientLogin from './pages/ClientLogin'
 import ClientProfile from './pages/ClientProfile'
 import ClientSOS from './pages/ClientSOS'
+import SimulatorPage from './pages/Simulator'
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('sf_token')
@@ -75,6 +76,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/client/profile" element={<ClientProfile />} />
         <Route path="/client/sos" element={<ClientSOS />} />
 
+        <Route path="/simulator" element={<SimulatorPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
