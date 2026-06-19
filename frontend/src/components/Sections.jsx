@@ -593,10 +593,10 @@ export function DiagramNode({ cx, cy, label, sub, emphasized }) {
         rx="6"
         fill={
           emphasized
-            ? "color-mix(in oklch, var(--accent) 14%, var(--surface))" 
+            ? "color-mix(in oklch, var(--accent) 14%, var(--surface))"
             : "var(--surface)"
         }
-        stroke={emphasized ? "var(--accent)"  : "var(--hairline-2)"}
+        stroke={emphasized ? "var(--accent)" : "var(--hairline-2)"}
       />
       <text
         x={cx}
@@ -1044,7 +1044,7 @@ export function Compare() {
         style={{
           position: "absolute",
           inset: 0,
-        
+
           opacity: 0.8,
           pointerEvents: "none",
         }}
@@ -1561,8 +1561,8 @@ export function Contact() {
 }
 
 export function SOSFeature() {
-  const [t] = useT()
-  const colors = ["var(--red)", "var(--amber)", "var(--cyan)", "var(--green)"]
+  const [t] = useT();
+  const colors = ["var(--red)", "var(--amber)", "var(--cyan)", "var(--green)"];
 
   return (
     <section
@@ -1659,8 +1659,8 @@ export function SOSFeature() {
                       i === 0
                         ? "radial-gradient(circle at 0% 0%, color-mix(in oklch, var(--red) 18%, transparent), transparent 52%)"
                         : i === 3
-                        ? "radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 52%)"
-                        : "none",
+                          ? "radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 52%)"
+                          : "none",
                     pointerEvents: "none",
                   }}
                 />
@@ -1736,34 +1736,7 @@ export function SOSFeature() {
           ))}
         </div>
 
-        <Reveal delay={80}>
-          <div
-            style={{
-              marginTop: 32,
-              padding: "14px 20px",
-              border: "1px solid var(--hairline)",
-              borderRadius: "var(--radius)",
-              background: "var(--surface)",
-              display: "flex",
-              gap: 12,
-              alignItems: "flex-start",
-            }}
-          >
-            <span style={{ fontSize: 14, flexShrink: 0, opacity: 0.7, marginTop: 1 }}>ℹ</span>
-            <p
-              className="mono"
-              style={{
-                margin: 0,
-                fontSize: 11,
-                color: "var(--fg-muted)",
-                lineHeight: 1.65,
-                letterSpacing: "0.04em",
-              }}
-            >
-              {t.sos.disclaimer}
-            </p>
-          </div>
-        </Reveal>
+        
       </div>
 
       <style>{`
@@ -1775,7 +1748,7 @@ export function SOSFeature() {
         }
       `}</style>
     </section>
-  )
+  );
 }
 
 export function Footer() {
