@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useT, Reveal, useScrollProgress, clamp } from "../shared";
 import { SF_I18N } from "../i18n";
 import { Logomark } from "./Logomark";
@@ -622,13 +622,40 @@ export function DiagramNode({ cx, cy, label, sub, emphasized }) {
     </g>
   );
 }
-
 export function TimeSaved() {
   const [t] = useT();
   const ref = useRef(null);
-  const p = useScrollProgress(ref, { start: 0.1, end: 0.85 });
-  const withSF = clamp(p * 1.3, 0, 1);
-  const withoutSF = clamp(p * 0.55, 0, 1);
+  const [isInView, setIsInView] = useState(false);
+  const [showTimeSaved, setShowTimeSaved] = useState(false);
+
+  // Sped up durations to keep the entire experience snappy
+  const slowDuration = 4.0; 
+  const fastDuration = 4.0 * (688 / 1122); // ~2.45 seconds
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          
+          // Pops up the exact moment the FAST track finishes its run
+          const timer = setTimeout(() => {
+            setShowTimeSaved(true);
+          }, fastDuration * 1000);
+
+          return () => clearTimeout(timer);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [fastDuration]);
+
   return (
     <section
       ref={ref}
@@ -642,6 +669,7 @@ export function TimeSaved() {
             sub={t.timesaved.body}
           />
         </Reveal>
+        
         <div
           style={{
             display: "flex",
@@ -654,13 +682,17 @@ export function TimeSaved() {
             label={t === SF_I18N.pt ? "SEM Smart Flow" : "WITHOUT Smart Flow"}
             time="00:18:42"
             color="var(--red)"
-            progress={withoutSF}
+            progress={isInView ? 1 : 0}
+            duration={slowDuration}
           />
           <RaceTrack
             label={t === SF_I18N.pt ? "COM Smart Flow" : "WITH Smart Flow"}
             time="00:11:28"
+            timeSaved={t === SF_I18N.pt ? "Poupança: 00:07:14" : "Saved: 00:07:14"}
+            showTimeSaved={showTimeSaved}
             color="var(--green)"
-            progress={withSF}
+            progress={isInView ? 1 : 0}
+            duration={fastDuration}
             highlight
           />
         </div>
@@ -669,10 +701,20 @@ export function TimeSaved() {
   );
 }
 
-export function RaceTrack({ label, time, color, progress, highlight }) {
+export function RaceTrack({ 
+  label, 
+  time, 
+  timeSaved, 
+  showTimeSaved, 
+  color, 
+  progress, 
+  duration, 
+  highlight 
+}) {
   return (
     <div
       style={{
+        position: "relative",
         border: "1px solid var(--hairline)",
         borderRadius: "var(--radius-lg)",
         padding: 24,
@@ -681,6 +723,48 @@ export function RaceTrack({ label, time, color, progress, highlight }) {
           : "var(--surface)",
       }}
     >
+      {/* Notification Bubble Pill */}
+      {timeSaved && (
+        <div
+          className="mono"
+          style={{
+            position: "absolute",
+            top: -16, 
+            right: 24,
+            background: "var(--green)",
+            color: "var(--surface)",
+            padding: "6px 14px",
+            borderRadius: 12,
+            fontSize: 12,
+            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2), 0 0 12px color-mix(in oklch, var(--green) 30%, transparent)",
+            zIndex: 10,
+            opacity: showTimeSaved ? 1 : 0,
+            transform: showTimeSaved ? "translateY(0) scale(1)" : "translateY(8px) scale(0.85)",
+            transition: "opacity 0.3s ease-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            pointerEvents: "none",
+          }}
+        >
+          <span>⚡</span>
+          <span>{timeSaved}</span>
+          
+          <div 
+            style={{
+              position: "absolute",
+              bottom: -4,
+              right: 20,
+              width: 8,
+              height: 8,
+              background: "var(--green)",
+              transform: "rotate(45deg)",
+            }}
+          />
+        </div>
+      )}
+
       <div
         style={{
           display: "flex",
@@ -689,6 +773,7 @@ export function RaceTrack({ label, time, color, progress, highlight }) {
           alignItems: "center",
           flexWrap: "wrap",
           gap: 12,
+          width: "100%"
         }}
       >
         <div
@@ -701,10 +786,12 @@ export function RaceTrack({ label, time, color, progress, highlight }) {
         >
           {label}
         </div>
+        
         <div className="mono" style={{ fontSize: 22, color }}>
           {time}
         </div>
       </div>
+      
       <div
         style={{
           position: "relative",
@@ -721,12 +808,13 @@ export function RaceTrack({ label, time, color, progress, highlight }) {
             background: color,
             transformOrigin: "left",
             transform: `scaleX(${progress})`,
-            transition: "transform .15s linear",
+            transition: `transform ${duration}s cubic-bezier(0.25, 1, 0.5, 1)`,
             borderRadius: 999,
             boxShadow: `0 0 18px ${color}`,
           }}
         />
       </div>
+      
       <div style={{ position: "relative", marginTop: 10, height: 22 }}>
         <div
           className="mono"
@@ -734,7 +822,7 @@ export function RaceTrack({ label, time, color, progress, highlight }) {
             position: "absolute",
             left: `calc(${progress * 100}% - 14px)`,
             fontSize: 16,
-            transition: "left .15s linear",
+            transition: `left ${duration}s cubic-bezier(0.25, 1, 0.5, 1)`,
             filter: "drop-shadow(0 2px 6px rgba(0,0,0,.3))",
           }}
         >
@@ -744,7 +832,6 @@ export function RaceTrack({ label, time, color, progress, highlight }) {
     </div>
   );
 }
-
 export function Market() {
   const [t] = useT();
   return (
