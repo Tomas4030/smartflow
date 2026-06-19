@@ -85,6 +85,7 @@ export const SF_I18N = {
         "Corredores via GPS ou app",
         "Depende da localização do veículo",
         "Integração complexa com a frota",
+        "Custo elevado — hardware em cada veículo",
       ],
       b_name: "Smart Flow",
       b_pts: [
@@ -275,6 +276,7 @@ export const SF_I18N = {
         "Emergency corridors via GPS or app",
         "Depends on vehicle location",
         "Complex fleet integration",
+        "High cost — hardware required in every vehicle",
       ],
       b_name: "Smart Flow",
       b_pts: [
