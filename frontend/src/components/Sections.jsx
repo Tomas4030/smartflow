@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 import { useT, Reveal, useScrollProgress, clamp } from "../shared";
 import { SF_I18N } from "../i18n";
 import { Logomark } from "./Logomark";
@@ -1398,6 +1399,7 @@ export function Contact() {
   const [t] = useT();
   return (
     <section
+      id="contact"
       style={{
         padding: "120px 0",
         borderTop: "1px solid var(--hairline)",
@@ -1456,9 +1458,9 @@ export function Contact() {
             <a href={`mailto:${t.contact.email}`} className="btn btn-primary">
               {t.contact.cta} →
             </a>
-            <a href="#top" className="btn btn-ghost">
-              {t.nav.loginBt}
-            </a>
+            <Link to="/client/register" className="btn btn-ghost">
+              {t.contact.cta_sos} →
+            </Link>
           </div>
           <div
             className="mono"
