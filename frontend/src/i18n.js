@@ -59,7 +59,7 @@ export const SF_I18N = {
       title: "O que nos diferencia.",
       cards: [
         { v: "Sem GPS nem apps", l: "A deteção é feita por visão computacional no próprio cruzamento. Não depende da localização enviada pelos veículos.", k: "01" },
-        { v: "Instalação Plug & Play", l: "Instala-se apenas nos cruzamentos definidos pelo município e fica operacional rapidamente, sem integrações complexas.", k: "02" },
+        { v: "Implementação simples", l: "Instala-se apenas nos cruzamentos definidos pelo município e fica operacional rapidamente, sem integrações complexas.", k: "02" },
         { v: "Piloto no terreno", l: "Projeto-piloto em Albufeira, com validação conjunta com a Proteção Civil e foco numa aplicação real.", k: "03" },
       ],
     },
@@ -250,9 +250,9 @@ export const SF_I18N = {
       eyebrow: "WHY SMARTFLOW",
       title: "What sets us apart.",
       cards: [
-        { v: "No GPS", l: "The camera sees the ambulance. Zero fleet integration.", k: "01" },
-        { v: "Plug & Play", l: "Install at one intersection. Operational the same day.", k: "02" },
-        { v: "Real Pilot", l: "Albufeira 2026. Validation with civil protection.", k: "03" },
+        { v: "No GPS, No Apps", l: "Detection runs on computer vision at the intersection itself. No location signal from the vehicle required.", k: "01" },
+        { v: "Simple to Deploy", l: "Installed only at the intersections your municipality selects. Up and running fast, no complex integrations.", k: "02" },
+        { v: "Tested in the Field", l: "Live pilot in Albufeira, developed alongside Civil Protection for real emergency use.", k: "03" },
       ],
     },
     roadmap: {
