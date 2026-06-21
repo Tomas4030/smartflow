@@ -17,20 +17,12 @@ function createTrafficIcon(status, phase) {
     green = "rgba(100,100,100,0.3)";
   if (status === "priority") {
     green = "#4ade80";
-  } else if (
-    status === "offline" ||
-    status === "pending" ||
-    status === "idle"
-  ) {
+  } else if (status === "offline" || status === "pending") {
     // all off
-  } else {
-    if (phase === 0) {
-      red = "#ef4444";
-    } else if (phase === 1) {
-      amber = "#f59e0b";
-    } else {
-      green = "#4ade80";
-    }
+  } else if (status === "idle") {
+    if (phase === 0) red = "#ef4444";
+    else if (phase === 1) amber = "#f59e0b";
+    else green = "#4ade80";
   }
 
   const glow =
@@ -69,11 +61,24 @@ function FitBounds({ intersections }) {
 
 export function MonitoringMap({ intersections }) {
   const [phase, setPhase] = useState(0);
+  const [priorityId, setPriorityId] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => setPhase((p) => (p + 1) % 3), 2000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (intersections.length === 0) return;
+    const simulate = () => {
+      const idx = Math.floor(Math.random() * intersections.length);
+      setPriorityId(intersections[idx].id);
+      setTimeout(() => setPriorityId(null), 8000);
+    };
+    const timer = setInterval(simulate, 15000);
+    const initial = setTimeout(simulate, 5000);
+    return () => { clearInterval(timer); clearTimeout(initial); };
+  }, [intersections]);
 
   if (intersections.length === 0) {
     return (
@@ -122,11 +127,14 @@ export function MonitoringMap({ intersections }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <FitBounds intersections={intersections} />
-        {intersections.map((inter) => (
+        {intersections.map((inter, idx) => {
+          const simStatus = inter.id === priorityId ? "priority" : inter.status;
+          const localPhase = (phase + idx) % 3;
+          return (
           <Marker
             key={inter.id}
             position={[Number(inter.lat), Number(inter.lng)]}
-            icon={createTrafficIcon(inter.status, phase)}
+            icon={createTrafficIcon(simStatus, localPhase)}
           >
             <Popup>
               <div style={{ fontFamily: "var(--font-body)", minWidth: 180 }}>
@@ -146,19 +154,19 @@ export function MonitoringMap({ intersections }) {
                     fontSize: 11,
                     fontWeight: 500,
                     background:
-                      inter.status === "idle"
+                      simStatus === "idle"
                         ? "#dcfce7"
-                        : inter.status === "priority"
+                        : simStatus === "priority"
                           ? "#fee2e2"
-                          : inter.status === "pending"
+                          : simStatus === "pending"
                             ? "#fef3c7"
                             : "#f3f4f6",
                     color:
-                      inter.status === "idle"
+                      simStatus === "idle"
                         ? "#166534"
-                        : inter.status === "priority"
+                        : simStatus === "priority"
                           ? "#991b1b"
-                          : inter.status === "pending"
+                          : simStatus === "pending"
                             ? "#92400e"
                             : "#374151",
                   }}
@@ -169,27 +177,28 @@ export function MonitoringMap({ intersections }) {
                       height: 6,
                       borderRadius: "50%",
                       background:
-                        inter.status === "idle"
+                        simStatus === "idle"
                           ? "#4ade80"
-                          : inter.status === "priority"
+                          : simStatus === "priority"
                             ? "#ef4444"
-                            : inter.status === "pending"
+                            : simStatus === "pending"
                               ? "#f59e0b"
                               : "#6b7280",
                     }}
                   />
-                  {inter.status === "idle"
-                    ? "Inativo"
-                    : inter.status === "priority"
+                  {simStatus === "idle"
+                    ? "Ativo"
+                    : simStatus === "priority"
                       ? "Prioridade"
-                      : inter.status === "pending"
+                      : simStatus === "pending"
                         ? "Pendente"
                         : "Offline"}
                 </div>
               </div>
             </Popup>
           </Marker>
-        ))}
+          );
+        })}
       </MapContainer>
     </div>
   );

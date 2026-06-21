@@ -71,7 +71,7 @@ const ctrlSty = {
   boxSizing: "border-box",
 };
 
-export function EventsPage() {
+export function EventsPage({ limit, embedded } = {}) {
   const user = AUTH.getUser();
   const municipality = user?.municipality || "SmartFlow";
   const [events, setEvents] = useState([]);
@@ -123,6 +123,65 @@ export function EventsPage() {
     setFInt(""); setFFrom(""); setFTo(""); setFStatus("");
   }
   const hasFilter = fInt || fFrom || fTo || fStatus;
+
+  if (embedded) {
+    const limitedEvents = events.slice(0, limit || 5);
+    return (
+      <>
+        <style>{`
+          @keyframes sf-ev-shimmer { 0%,100%{opacity:.35} 50%{opacity:.7} }
+          @keyframes sf-ev-pulse {
+            0%,100%{box-shadow:0 0 0 0 color-mix(in oklch, var(--red) 55%, transparent)}
+            50%{box-shadow:0 0 0 5px color-mix(in oklch, var(--red) 0%, transparent)}
+          }
+          .sf-ev-tr:hover td { background: color-mix(in oklch, var(--surface) 45%, transparent) !important; }
+        `}</style>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 760 }}>
+            <thead>
+              <tr style={{ background: "var(--surface)" }}>
+                {["ID Cruzamento", "Cruzamento", "Acionado por", "Verde", "Detetado em", "Resolvido em", "Estado"].map(h => (
+                  <th key={h} style={{ padding: "11px 16px", textAlign: "left", fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--fg-muted)", fontWeight: 500, borderBottom: "1px solid var(--hairline)", whiteSpace: "nowrap" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                Array.from({ length: limit || 5 }).map((_, i) => <SkeletonRow key={i} />)
+              ) : limitedEvents.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ padding: "52px 16px", textAlign: "center", color: "var(--fg-muted)" }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                      <IcoEmpty />
+                      <span style={{ fontSize: 13.5 }}>Nenhum evento encontrado.</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : limitedEvents.map((ev, idx) => (
+                <tr key={ev.id} className="sf-ev-tr" style={{ borderBottom: idx < limitedEvents.length - 1 ? "1px solid var(--hairline)" : "none" }}>
+                  <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)" }}>{ev.intersectionId}</td>
+                  <td style={{ padding: "13px 16px", fontSize: 13.5, color: "var(--fg)", maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {ev.intersection?.name || "Cruzamento"}
+                  </td>
+                  <td style={{ padding: "13px 16px", fontSize: 13, color: "var(--fg-dim)", whiteSpace: "nowrap" }}>
+                    {ev.triggeredBy === "sos" ? (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "3px 9px", borderRadius: 999, fontSize: 11, fontWeight: 600, background: "color-mix(in oklch, var(--red) 12%, transparent)", color: "var(--red)", border: "1px solid color-mix(in oklch, var(--red) 25%, transparent)" }}>🚨 SOS Cidadão</span>
+                    ) : ev.triggeredBy}
+                  </td>
+                  <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 13, color: "var(--cyan)" }}>{ev.greenDurationS}s</td>
+                  <td style={{ padding: "13px 16px", fontSize: 12.5, color: "var(--fg-dim)", whiteSpace: "nowrap" }}>{fmtDatetime(ev.detectedAt)}</td>
+                  <td style={{ padding: "13px 16px", fontSize: 12.5, color: "var(--fg-muted)", whiteSpace: "nowrap" }}>{fmtDatetime(ev.resolvedAt)}</td>
+                  <td style={{ padding: "13px 16px" }}>
+                    <EventStatus status={ev.resolvedAt ? "resolved" : "active"} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
