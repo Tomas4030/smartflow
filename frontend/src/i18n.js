@@ -37,7 +37,7 @@ export const SF_I18N = {
     },
     solution: {
       eyebrow: "SMARTFLOW · CRUZAMENTOS",
-      title: "IA vê. Semáforo abre.",
+      title: "Menos espera. Mais vidas.",
       points: [
         {
           t: "Deteção por IA",

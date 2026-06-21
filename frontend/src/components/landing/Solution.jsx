@@ -236,100 +236,6 @@ export function SystemDiagram() {
           />
         </g>
 
-        {/* Zona de deteção da câmara */}
-        <path
-          d="M94 120 C110 160 138 185 176 198"
-          stroke="var(--cyan)"
-          strokeWidth="1.4"
-          strokeDasharray="4 6"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.75"
-          markerEnd="url(#sf-arrow-cyan)"
-        >
-          <animate
-            className="sf-diagram-motion"
-            attributeName="stroke-dashoffset"
-            from="0"
-            to="-20"
-            dur="1.4s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Câmara → controlador */}
-        <path
-          d="M116 132 C124 162 145 182 166 194"
-          stroke="var(--accent)"
-          strokeWidth="1.4"
-          strokeDasharray="4 5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.86"
-          markerEnd="url(#sf-arrow-accent)"
-        >
-          <animate
-            className="sf-diagram-motion"
-            attributeName="stroke-dashoffset"
-            from="0"
-            to="-18"
-            dur="1.25s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Controlador → semáforo */}
-        <path
-          d="M234 194 C260 180 278 154 286 130"
-          stroke="var(--accent)"
-          strokeWidth="1.4"
-          strokeDasharray="4 5"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.86"
-          markerEnd="url(#sf-arrow-accent)"
-        >
-          <animate
-            className="sf-diagram-motion"
-            attributeName="stroke-dashoffset"
-            from="0"
-            to="-18"
-            dur="1.25s"
-            repeatCount="indefinite"
-          />
-        </path>
-
-        {/* Rota da ambulância */}
-        <path
-          d="M200 318 V238"
-          stroke="var(--cyan)"
-          strokeWidth="1.7"
-          strokeLinecap="round"
-          opacity="0.78"
-          markerEnd="url(#sf-arrow-cyan)"
-        />
-
-        {/* Ambulância → câmara (sinal de deteção) */}
-        <path
-          d="M188 308 C160 270 120 210 98 134"
-          stroke="var(--cyan)"
-          strokeWidth="1.2"
-          strokeDasharray="3 6"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.55"
-          markerEnd="url(#sf-arrow-cyan)"
-        >
-          <animate
-            className="sf-diagram-motion"
-            attributeName="stroke-dashoffset"
-            from="0"
-            to="-18"
-            dur="1.6s"
-            repeatCount="indefinite"
-          />
-        </path>
-
         {/* Pulso no cruzamento */}
         <circle
           cx="200"
@@ -390,6 +296,80 @@ export function SystemDiagram() {
           icon="ambulance"
           width={124}
         />
+
+        {/* Setas — renderizadas por último para ficarem acima das boxes */}
+        {/* Câmara → Controlador */}
+        <path
+          d="M146 138 C158 158 164 168 174 174"
+          stroke="var(--cyan)"
+          strokeWidth="1.4"
+          strokeDasharray="4 6"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.75"
+          markerEnd="url(#sf-arrow-cyan)"
+        >
+          <animate
+            className="sf-diagram-motion"
+            attributeName="stroke-dashoffset"
+            from="0"
+            to="-20"
+            dur="1.4s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Controlador → Semáforo */}
+        <path
+          d="M263 188 C276 176 282 162 286 146"
+          stroke="var(--accent)"
+          strokeWidth="1.4"
+          strokeDasharray="4 5"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.86"
+          markerEnd="url(#sf-arrow-accent)"
+        >
+          <animate
+            className="sf-diagram-motion"
+            attributeName="stroke-dashoffset"
+            from="0"
+            to="-18"
+            dur="1.25s"
+            repeatCount="indefinite"
+          />
+        </path>
+
+        {/* Ambulância → Controlador */}
+        <path
+          d="M200 296 V226"
+          stroke="var(--cyan)"
+          strokeWidth="1.7"
+          strokeLinecap="round"
+          opacity="0.78"
+          markerEnd="url(#sf-arrow-cyan)"
+        />
+
+        {/* Ambulância → Câmara (sinal de deteção) */}
+        <path
+          d="M168 296 C148 260 118 200 98 146"
+          stroke="var(--cyan)"
+          strokeWidth="1.2"
+          strokeDasharray="3 6"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.55"
+          markerEnd="url(#sf-arrow-cyan)"
+        >
+          <animate
+            className="sf-diagram-motion"
+            attributeName="stroke-dashoffset"
+            from="0"
+            to="-18"
+            dur="1.6s"
+            repeatCount="indefinite"
+          />
+        </path>
       </svg>
 
       <div
