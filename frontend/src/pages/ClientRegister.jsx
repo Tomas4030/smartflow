@@ -30,11 +30,13 @@ export default function ClientRegister() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
-      <header style={{ height: 68, display: "flex", alignItems: "center", padding: "0 24px", borderBottom: "1px solid var(--hairline)", background: "color-mix(in oklch, var(--bg) 82%, transparent)" }}>
-        <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Logomark size={22} />
-          <span className="display" style={{ fontSize: 17, fontWeight: 600 }}>Smart<span style={{ color: "var(--accent)" }}>Flow</span> <span style={{ color: "var(--red)", fontSize: 13 }}>SOS</span></span>
-        </Link>
+      <header style={{ height: 68, borderBottom: "1px solid var(--hairline)", background: "transparent" }}>
+        <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "100%" }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <Logomark size={22} />
+            <span className="display" style={{ fontSize: 18, fontWeight: 600, letterSpacing: "-0.02em" }}>Smart<span style={{ color: "var(--accent)" }}>Flow</span> <span style={{ color: "var(--red)", fontSize: 12 }}>SOS</span></span>
+          </Link>
+        </div>
       </header>
       <main style={{ flex: 1, display: "grid", placeItems: "center", padding: "40px 20px" }}>
         <form onSubmit={handleSubmit} style={{ background: "var(--bg-2)", border: "1px solid var(--hairline)", borderRadius: "var(--radius-lg)", padding: "36px 32px", width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", gap: 18, boxShadow: "0 28px 64px -20px rgba(0,0,0,0.4)" }}>
