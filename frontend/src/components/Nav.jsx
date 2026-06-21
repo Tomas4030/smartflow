@@ -67,9 +67,7 @@ export function Nav() {
         zIndex: 50,
         backdropFilter: "blur(14px)",
         WebkitBackdropFilter: "blur(14px)",
-        background: scrolled
-          ? "color-mix(in oklch, var(--bg) 78%, transparent)"
-          : "transparent",
+        background: "transparent",
         borderBottom: scrolled
           ? "1px solid var(--hairline)"
           : "1px solid transparent",

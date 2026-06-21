@@ -6,6 +6,18 @@ function getHeaders() {
   return { "Content-Type": "application/json", Authorization: `Bearer ${localStorage.getItem("citizen_token")}` };
 }
 
+function navLink(active) {
+  return {
+    padding: "6px 12px",
+    fontSize: 13,
+    color: active ? "var(--fg)" : "var(--fg-dim)",
+    background: active ? "color-mix(in oklch, var(--accent) 12%, var(--surface))" : "transparent",
+    borderRadius: "var(--radius-sm)",
+    border: active ? "1px solid color-mix(in oklch, var(--accent) 28%, var(--hairline))" : "1px solid transparent",
+    textDecoration: "none",
+  };
+}
+
 export default function ClientSOS() {
   const navigate = useNavigate();
   const [citizen, setCitizen] = useState(null);
@@ -61,16 +73,18 @@ export default function ClientSOS() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
-      <header style={{ height: 58, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", borderBottom: "1px solid var(--hairline)", background: "var(--bg-2)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Logomark size={22} />
-          <span className="display" style={{ fontSize: 15, fontWeight: 600 }}>Smart<span style={{ color: "var(--accent)" }}>Flow</span> <span style={{ color: "var(--red)", fontSize: 12 }}>SOS</span></span>
+      <header style={{ height: 68, borderBottom: "1px solid var(--hairline)", background: "transparent" }}>
+        <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "100%" }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <Logomark size={22} />
+            <span className="display" style={{ fontSize: 18, fontWeight: 600, letterSpacing: "-0.02em" }}>Smart<span style={{ color: "var(--accent)" }}>Flow</span> <span style={{ color: "var(--red)", fontSize: 12 }}>SOS</span></span>
+          </Link>
+          <nav style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <Link to="/client/sos" style={navLink(true)}>SOS</Link>
+            <Link to="/client/profile" style={navLink(false)}>Perfil</Link>
+            <button onClick={logout} style={{ padding: "6px 12px", fontSize: 13, color: "var(--fg-muted)", border: "1px solid var(--hairline)", borderRadius: "var(--radius-sm)", background: "transparent", cursor: "pointer" }}>Sair</button>
+          </nav>
         </div>
-        <nav style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <Link to="/client/sos" style={{ padding: "6px 12px", fontSize: 13, color: "var(--fg)", background: "color-mix(in oklch, var(--accent) 12%, var(--surface))", borderRadius: "var(--radius-sm)", border: "1px solid color-mix(in oklch, var(--accent) 28%, var(--hairline))" }}>SOS</Link>
-          <Link to="/client/profile" style={{ padding: "6px 12px", fontSize: 13, color: "var(--fg-dim)", borderRadius: "var(--radius-sm)" }}>Perfil</Link>
-          <button onClick={logout} style={{ padding: "6px 12px", fontSize: 13, color: "var(--fg-muted)", border: "1px solid var(--hairline)", borderRadius: "var(--radius-sm)" }}>Sair</button>
-        </nav>
       </header>
 
       <main style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 20px" }}>

@@ -5,9 +5,24 @@
 const ALBUFEIRA = [37.0891, -8.2499];
 
 const SCENE = {
-  hospital: { id: "hosp", name: "Hospital de Albufeira", lat: 37.10120, lng: -8.24350 },
-  call:     { id: "call", name: "Chamada · Av. dos Descobrimentos", lat: 37.07980, lng: -8.27050 },
-  ambStart: { id: "amb",  name: "Quartel de Bombeiros", lat: 37.09870, lng: -8.26210 },
+  hospital: {
+    id: "hosp",
+    name: "Hospital de Albufeira",
+    lat: 37.1012,
+    lng: -8.2435,
+  },
+  call: {
+    id: "call",
+    name: "Chamada · Av. dos Descobrimentos",
+    lat: 37.0798,
+    lng: -8.2705,
+  },
+  ambStart: {
+    id: "amb",
+    name: "Quartel de Bombeiros",
+    lat: 37.0987,
+    lng: -8.2621,
+  },
 };
 
 // OSRM public demo server — free, road routing on OSM data
@@ -24,7 +39,10 @@ async function osrmRoute(from, to) {
     return j.routes[0].geometry.coordinates.map(([lng, lat]) => [lat, lng]);
   } catch (e) {
     // fallback: straight line
-    return [[from.lat, from.lng], [to.lat, to.lng]];
+    return [
+      [from.lat, from.lng],
+      [to.lat, to.lng],
+    ];
   }
 }
 
@@ -32,8 +50,8 @@ function polylineLengths(pts) {
   let total = 0;
   const segs = [];
   for (let i = 0; i < pts.length - 1; i++) {
-    const dx = pts[i+1][0] - pts[i][0];
-    const dy = pts[i+1][1] - pts[i][1];
+    const dx = pts[i + 1][0] - pts[i][0];
+    const dy = pts[i + 1][1] - pts[i][1];
     const d = Math.hypot(dx, dy);
     segs.push(d);
     total += d;
@@ -49,8 +67,9 @@ function posAlong(pts, p) {
   for (let i = 0; i < segs.length; i++) {
     if (acc + segs[i] >= target) {
       const local = segs[i] === 0 ? 0 : (target - acc) / segs[i];
-      const a = pts[i], b = pts[i+1];
-      return [a[0] + (b[0]-a[0]) * local, a[1] + (b[1]-a[1]) * local];
+      const a = pts[i],
+        b = pts[i + 1];
+      return [a[0] + (b[0] - a[0]) * local, a[1] + (b[1] - a[1]) * local];
     }
     acc += segs[i];
   }
@@ -67,7 +86,7 @@ function sampleIntersections(routePts, count = 6) {
   const usable = endSkip - startSkip;
   if (usable <= 0) return [];
   for (let i = 0; i < count; i++) {
-    const idx = startSkip + Math.floor((i + 1) * usable / (count + 1));
+    const idx = startSkip + Math.floor(((i + 1) * usable) / (count + 1));
     const p = routePts[idx];
     out.push({ id: `int_${i}`, lat: p[0], lng: p[1], routeIdx: idx });
   }
@@ -115,61 +134,101 @@ function Simulator() {
       const ints = sampleIntersections(fullRoute, 6);
       setIntersections(ints);
       const initLights = {};
-      ints.forEach(i => initLights[i.id] = "red");
+      ints.forEach((i) => (initLights[i.id] = "red"));
       setLightStates(initLights);
       setRoutesLoading(false);
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   // ── init map ───────────────────────────────────────────
   useEffect(() => {
     if (!window.L || mapInstance.current) return;
     const map = L.map(mapRef.current, {
-      zoomControl: true, scrollWheelZoom: true, attributionControl: true,
+      zoomControl: true,
+      scrollWheelZoom: true,
+      attributionControl: true,
     }).setView(ALBUFEIRA, 14);
 
-    const tileUrl = theme === "dark"
-      ? "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
-      : "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png";
-    const tileLabels = theme === "dark"
-      ? "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
-      : "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png";
+    const tileUrl =
+      theme === "dark"
+        ? "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png"
+        : "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png";
+    const tileLabels =
+      theme === "dark"
+        ? "https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png"
+        : "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png";
 
     L.tileLayer(tileUrl, {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      maxZoom: 19, subdomains: "abcd",
+      attribution: "&copy; OpenStreetMap &copy; CARTO",
+      maxZoom: 19,
+      subdomains: "abcd",
     }).addTo(map);
-    L.tileLayer(tileLabels, { maxZoom: 19, subdomains: "abcd", pane: "shadowPane" }).addTo(map);
+    L.tileLayer(tileLabels, {
+      maxZoom: 19,
+      subdomains: "abcd",
+      pane: "shadowPane",
+    }).addTo(map);
 
     mapInstance.current = map;
 
     // hospital pin
     L.marker([SCENE.hospital.lat, SCENE.hospital.lng], {
-      icon: L.divIcon({ className: "sf-icon", html: `<div class="sf-pin sf-pin-hosp">H</div>`, iconSize: [28,28], iconAnchor: [14,14] }),
-    }).addTo(map).bindTooltip(SCENE.hospital.name, { direction: "top", offset: [0,-10] });
+      icon: L.divIcon({
+        className: "sf-icon",
+        html: `<div class="sf-pin sf-pin-hosp">H</div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      }),
+    })
+      .addTo(map)
+      .bindTooltip(SCENE.hospital.name, { direction: "top", offset: [0, -10] });
 
     // call pin
     L.marker([SCENE.call.lat, SCENE.call.lng], {
-      icon: L.divIcon({ className: "sf-icon", html: `<div class="sf-pin sf-pin-call"><span class="sf-pulse"></span>!</div>`, iconSize: [28,28], iconAnchor: [14,14] }),
-    }).addTo(map).bindTooltip(SCENE.call.name, { direction: "top", offset: [0,-10] });
+      icon: L.divIcon({
+        className: "sf-icon",
+        html: `<div class="sf-pin sf-pin-call"><span class="sf-pulse"></span>!</div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+      }),
+    })
+      .addTo(map)
+      .bindTooltip(SCENE.call.name, { direction: "top", offset: [0, -10] });
 
     // ambulance origin marker (small, just a dot)
     L.marker([SCENE.ambStart.lat, SCENE.ambStart.lng], {
-      icon: L.divIcon({ className: "sf-icon", html: `<div class="sf-pin sf-pin-base">B</div>`, iconSize: [20,20], iconAnchor: [10,10] }),
-    }).addTo(map).bindTooltip(SCENE.ambStart.name, { direction: "top", offset: [0,-8] });
+      icon: L.divIcon({
+        className: "sf-icon",
+        html: `<div class="sf-pin sf-pin-base">B</div>`,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+      }),
+    })
+      .addTo(map)
+      .bindTooltip(SCENE.ambStart.name, { direction: "top", offset: [0, -8] });
 
     // ambulance live marker
     ambMarkerRef.current = L.marker([SCENE.ambStart.lat, SCENE.ambStart.lng], {
-      icon: L.divIcon({ className: "sf-icon", html: `<div class="sf-amb">🚑</div>`, iconSize: [32,32], iconAnchor: [16,16] }),
+      icon: L.divIcon({
+        className: "sf-icon",
+        html: `<div class="sf-amb">🚑</div>`,
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+      }),
       zIndexOffset: 1000,
     }).addTo(map);
 
-    map.fitBounds([
-      [SCENE.ambStart.lat, SCENE.ambStart.lng],
-      [SCENE.hospital.lat, SCENE.hospital.lng],
-      [SCENE.call.lat, SCENE.call.lng],
-    ], { padding: [60, 60] });
+    map.fitBounds(
+      [
+        [SCENE.ambStart.lat, SCENE.ambStart.lng],
+        [SCENE.hospital.lat, SCENE.hospital.lng],
+        [SCENE.call.lat, SCENE.call.lng],
+      ],
+      { padding: [60, 60] },
+    );
 
     return () => {
       map.remove();
@@ -181,15 +240,16 @@ function Simulator() {
   useEffect(() => {
     if (!mapInstance.current || !intersections.length) return;
     // remove old
-    Object.values(intMarkersRef.current).forEach(m => m.remove());
+    Object.values(intMarkersRef.current).forEach((m) => m.remove());
     intMarkersRef.current = {};
 
-    intersections.forEach(int => {
+    intersections.forEach((int) => {
       const m = L.marker([int.lat, int.lng], {
         icon: L.divIcon({
           className: "sf-icon",
           html: `<div class="sf-int sf-int-red" data-id="${int.id}"></div>`,
-          iconSize: [16,16], iconAnchor: [8,8],
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
         }),
       }).addTo(mapInstance.current);
       intMarkersRef.current[int.id] = m;
@@ -198,7 +258,9 @@ function Simulator() {
     // also draw the full mission route faint underneath
     if (routePickup && routeHosp) {
       const full = [...routePickup, ...routeHosp];
-      L.polyline(full, { color: "#a78bfa", weight: 2, opacity: 0.25 }).addTo(mapInstance.current);
+      L.polyline(full, { color: "#a78bfa", weight: 2, opacity: 0.25 }).addTo(
+        mapInstance.current,
+      );
     }
   }, [intersections, routePickup, routeHosp]);
 
@@ -222,7 +284,7 @@ function Simulator() {
     if (!intersections.length) return;
     const cycle = setInterval(() => {
       if (smartFlow) return;
-      setLightStates(prev => {
+      setLightStates((prev) => {
         const next = { ...prev };
         intersections.forEach((int, idx) => {
           const phase = Math.floor(Date.now() / 6000) + idx;
@@ -236,30 +298,32 @@ function Simulator() {
 
   // ── sim tick ─────────────────────────────────────────────
   useEffect(() => {
-    if (status === "idle" || status === "arrived" || status === "pickup") return;
+    if (status === "idle" || status === "arrived" || status === "pickup")
+      return;
     if (!routePickup || !routeHosp) return;
 
     const route = status === "dispatched" ? routePickup : routeHosp;
     const { total } = polylineLengths(route);
     const baseSpeed = total * 0.06; // covers full leg in ~16s
 
-    let raf, last = performance.now();
+    let raf,
+      last = performance.now();
     const step = (now) => {
       const dt = (now - last) / 1000;
       last = now;
 
-      setProgress(prev => {
+      setProgress((prev) => {
         const pos = posAlong(route, prev);
 
         if (smartFlow) {
-          intersections.forEach(int => {
+          intersections.forEach((int) => {
             const dx = int.lat - pos[0];
             const dy = int.lng - pos[1];
             const d = Math.hypot(dx, dy);
             if (d < PREEMPT_DIST * 1.4) {
-              setLightStates(ls => {
+              setLightStates((ls) => {
                 if (ls[int.id] === "green") return ls;
-                setPreempted(p => p + 1);
+                setPreempted((p) => p + 1);
                 return { ...ls, [int.id]: "green" };
               });
             }
@@ -281,12 +345,15 @@ function Simulator() {
 
         const advance = (speed * dt) / total;
         const next = prev + advance;
-        setTickMs(ms => ms + dt * 1000);
+        setTickMs((ms) => ms + dt * 1000);
 
         if (next >= 1) {
           if (status === "dispatched") {
             setStatus("pickup");
-            setTimeout(() => { setStatus("hospital"); setProgress(0); }, 1800);
+            setTimeout(() => {
+              setStatus("hospital");
+              setProgress(0);
+            }, 1800);
             return 1;
           } else if (status === "hospital") {
             setStatus("arrived");
@@ -313,10 +380,13 @@ function Simulator() {
     ambMarkerRef.current.setLatLng(posAlong(route, progress));
 
     if (mapInstance.current) {
-      if (polylineRef.current) mapInstance.current.removeLayer(polylineRef.current);
+      if (polylineRef.current)
+        mapInstance.current.removeLayer(polylineRef.current);
       if (status !== "idle" && route.length > 1) {
         polylineRef.current = L.polyline(route, {
-          color: "#a78bfa", weight: 5, opacity: 0.9,
+          color: "#a78bfa",
+          weight: 5,
+          opacity: 0.9,
         }).addTo(mapInstance.current);
       }
     }
@@ -338,7 +408,7 @@ function Simulator() {
     setTickMs(0);
     setLightStates(() => {
       const o = {};
-      intersections.forEach(i => o[i.id] = "red");
+      intersections.forEach((i) => (o[i.id] = "red"));
       return o;
     });
     if (ambMarkerRef.current) {
@@ -350,7 +420,7 @@ function Simulator() {
     }
   }
 
-  const savedSec = smartFlow ? Math.round(tickMs / 1000 * 0.55) : 0;
+  const savedSec = smartFlow ? Math.round((tickMs / 1000) * 0.55) : 0;
   const statusLabel = {
     idle: t.sim.status_idle,
     dispatched: t.sim.status_dispatched,
@@ -360,105 +430,245 @@ function Simulator() {
   }[status];
 
   return (
-    <div style={{
-      position: "fixed", inset: 0,
-      display: "grid",
-      gridTemplateColumns: "360px 1fr",
-      gridTemplateRows: "64px 1fr",
-      background: "var(--bg)",
-      overflow: "hidden",
-    }}>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        display: "grid",
+        gridTemplateColumns: "360px 1fr",
+        gridTemplateRows: "64px 1fr",
+        background: "var(--bg)",
+        overflow: "hidden",
+      }}
+    >
       {/* top bar spanning both columns */}
-      <div style={{
-        gridColumn: "1 / -1",
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 24px",
-        borderBottom: "1px solid var(--hairline)",
-        background: "color-mix(in oklch, var(--bg) 92%, transparent)",
-        zIndex: 20,
-      }}>
-        <a href="index.html" style={{ display: "flex", alignItems: "center", gap: 12, color: "var(--fg-dim)", fontSize: 14 }}>
-          <Logomark size={20}/>
-          <span className="display" style={{ fontWeight: 600, color: "var(--fg)" }}>
-            Smart<span style={{color:"var(--accent)"}}>Flow</span>
+      <div
+        style={{
+          gridColumn: "1 / -1",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 24px",
+          borderBottom: "1px solid var(--hairline)",
+          background: "color-mix(in oklch, var(--bg) 92%, transparent)",
+          zIndex: 20,
+        }}
+      >
+        <a
+          href="index.html"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            color: "var(--fg-dim)",
+            fontSize: 14,
+          }}
+        >
+          <Logomark size={20} />
+          <span
+            className="display"
+            style={{ fontWeight: 600, color: "var(--fg)" }}
+          >
+            Smart<span style={{ color: "var(--accent)" }}>Flow</span>
           </span>
-          <span style={{ marginLeft: 16, color: "var(--fg-muted)", fontSize: 13 }}>{t.sim.back}</span>
+          <span
+            style={{ marginLeft: 16, color: "var(--fg-muted)", fontSize: 13 }}
+          >
+            {t.sim.back}
+          </span>
         </a>
-        <div className="mono" style={{ fontSize: 11, letterSpacing: "0.14em", color: "var(--fg-muted)" }}>
+        <div
+          className="mono"
+          style={{
+            fontSize: 11,
+            letterSpacing: "0.14em",
+            color: "var(--fg-muted)",
+          }}
+        >
           {t.sim.title.toUpperCase()} · {t.sim.sub.toUpperCase()}
         </div>
       </div>
 
       {/* left panel */}
-      <aside style={{
-        gridColumn: "1", gridRow: "2",
-        borderRight: "1px solid var(--hairline)",
-        background: "var(--bg)",
-        padding: 24,
-        overflowY: "auto",
-        display: "flex", flexDirection: "column", gap: 22,
-      }}>
+      <aside
+        style={{
+          gridColumn: "1",
+          gridRow: "2",
+          borderRight: "1px solid var(--hairline)",
+          background: "var(--bg)",
+          padding: 24,
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 22,
+        }}
+      >
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>{t.sim.panel_status}</div>
-          <div className="display" style={{ fontSize: 26, fontWeight: 500, lineHeight: 1.15, display: "flex", alignItems: "center", gap: 10 }}>
-            {routesLoading ? (t === window.SF_I18N.pt ? "A carregar rotas…" : "Loading routes…") : statusLabel}
+          <div className="eyebrow" style={{ marginBottom: 8 }}>
+            {t.sim.panel_status}
+          </div>
+          <div
+            className="display"
+            style={{
+              fontSize: 26,
+              fontWeight: 500,
+              lineHeight: 1.15,
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            {routesLoading
+              ? t === window.SF_I18N.pt
+                ? "A carregar rotas…"
+                : "Loading routes…"
+              : statusLabel}
             {status !== "idle" && status !== "arrived" && (
-              <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--red)", boxShadow: "0 0 12px var(--red)", animation: "sf-blink 1s infinite" }}/>
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: "var(--red)",
+                  boxShadow: "0 0 12px var(--red)",
+                  animation: "sf-blink 1s infinite",
+                }}
+              />
             )}
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", border: "1px solid var(--hairline)", borderRadius: 10, overflow: "hidden" }}>
-          <Stat label={t.sim.panel_lights} value={preempted} mono/>
-          <Stat label={t.sim.panel_saved} value={`${savedSec}s`} mono accent/>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            border: "1px solid var(--hairline)",
+            borderRadius: 10,
+            overflow: "hidden",
+          }}
+        >
+          <Stat label={t.sim.panel_lights} value={preempted} mono />
+          <Stat label={t.sim.panel_saved} value={`${savedSec}s`} mono accent />
         </div>
 
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>{t.sim.smartflow}</div>
-          <div style={{ display: "flex", gap: 6, padding: 4, border: "1px solid var(--hairline)", borderRadius: 999, background: "var(--bg-2)" }}>
-            {[{ v: true, l: t.sim.on }, { v: false, l: t.sim.off }].map(o => (
-              <button key={String(o.v)} onClick={() => setSmartFlow(o.v)}
+          <div className="eyebrow" style={{ marginBottom: 8 }}>
+            {t.sim.smartflow}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              padding: 4,
+              border: "1px solid var(--hairline)",
+              borderRadius: 999,
+              background: "var(--bg-2)",
+            }}
+          >
+            {[
+              { v: true, l: t.sim.on },
+              { v: false, l: t.sim.off },
+            ].map((o) => (
+              <button
+                key={String(o.v)}
+                onClick={() => setSmartFlow(o.v)}
                 style={{
-                  flex: 1, padding: "10px 12px", borderRadius: 999,
-                  fontFamily: "var(--font-mono)", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase",
+                  flex: 1,
+                  padding: "10px 12px",
+                  borderRadius: 999,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: 11,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
                   color: smartFlow === o.v ? "#fff" : "var(--fg-dim)",
-                  background: smartFlow === o.v ? (o.v ? "var(--accent)" : "var(--red)") : "transparent",
+                  background:
+                    smartFlow === o.v
+                      ? o.v
+                        ? "var(--accent)"
+                        : "var(--red)"
+                      : "transparent",
                   transition: "background .2s, color .2s",
-                }}>
+                }}
+              >
                 {o.l}
               </button>
             ))}
           </div>
-          <p style={{ fontSize: 12, color: "var(--fg-muted)", marginTop: 10, lineHeight: 1.5 }}>
+          <p
+            style={{
+              fontSize: 12,
+              color: "var(--fg-muted)",
+              marginTop: 10,
+              lineHeight: 1.5,
+            }}
+          >
             {smartFlow
-              ? (t === window.SF_I18N.pt ? "Os semáforos abrem antes da chegada da ambulância." : "Lights pre-empt to green before the ambulance arrives.")
-              : (t === window.SF_I18N.pt ? "A ambulância segue o ciclo normal e pára nos vermelhos." : "The ambulance obeys the normal cycle and stops at red lights.")}
+              ? t === window.SF_I18N.pt
+                ? "Os semáforos abrem antes da chegada da ambulância."
+                : "Lights pre-empt to green before the ambulance arrives."
+              : t === window.SF_I18N.pt
+                ? "A ambulância segue o ciclo normal e pára nos vermelhos."
+                : "The ambulance obeys the normal cycle and stops at red lights."}
           </p>
         </div>
 
         <div style={{ display: "flex", gap: 8 }}>
-          <button onClick={dispatch}
-            disabled={(status !== "idle" && status !== "arrived") || routesLoading}
+          <button
+            onClick={dispatch}
+            disabled={
+              (status !== "idle" && status !== "arrived") || routesLoading
+            }
             className="btn btn-primary"
             style={{
-              flex: 1, justifyContent: "center",
-              opacity: ((status !== "idle" && status !== "arrived") || routesLoading) ? 0.5 : 1,
-              cursor: ((status !== "idle" && status !== "arrived") || routesLoading) ? "not-allowed" : "pointer",
-            }}>
+              flex: 1,
+              justifyContent: "center",
+              opacity:
+                (status !== "idle" && status !== "arrived") || routesLoading
+                  ? 0.5
+                  : 1,
+              cursor:
+                (status !== "idle" && status !== "arrived") || routesLoading
+                  ? "not-allowed"
+                  : "pointer",
+            }}
+          >
             {t.sim.dispatch} →
           </button>
-          <button onClick={reset} className="btn btn-ghost" style={{ padding: "12px 14px" }}>↺</button>
+          <button
+            onClick={reset}
+            className="btn btn-ghost"
+            style={{ padding: "12px 14px" }}
+          >
+            ↺
+          </button>
         </div>
 
-        <div style={{ borderTop: "1px solid var(--hairline)", paddingTop: 16, display: "flex", flexDirection: "column", gap: 10 }}>
-          <div className="eyebrow">{t === window.SF_I18N.pt ? "Legenda" : "Legend"}</div>
-          <LegendRow color="var(--cyan)" label={t.sim.legend_hosp}/>
-          <LegendRow color="var(--red)" label={t.sim.legend_call}/>
-          <LegendRow color="var(--accent)" label={t.sim.legend_amb}/>
-          <LegendRow color="var(--green)" label={t.sim.legend_int}/>
+        <div
+          style={{
+            borderTop: "1px solid var(--hairline)",
+            paddingTop: 16,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <div className="eyebrow">
+            {t === window.SF_I18N.pt ? "Legenda" : "Legend"}
+          </div>
+          <LegendRow color="var(--cyan)" label={t.sim.legend_hosp} />
+          <LegendRow color="var(--red)" label={t.sim.legend_call} />
+          <LegendRow color="var(--accent)" label={t.sim.legend_amb} />
+          <LegendRow color="var(--green)" label={t.sim.legend_int} />
         </div>
 
-        <div style={{ marginTop: "auto", fontSize: 11, color: "var(--fg-muted)", lineHeight: 1.5 }}>
+        <div
+          style={{
+            marginTop: "auto",
+            fontSize: 11,
+            color: "var(--fg-muted)",
+            lineHeight: 1.5,
+          }}
+        >
           {t === window.SF_I18N.pt
             ? "Rota calculada via OSRM/OpenStreetMap. Os tempos exibidos são ilustrativos."
             : "Route via OSRM/OpenStreetMap. Times shown are illustrative."}
@@ -467,7 +677,7 @@ function Simulator() {
 
       {/* map */}
       <div style={{ gridColumn: "2", gridRow: "2", position: "relative" }}>
-        <div ref={mapRef} style={{ position: "absolute", inset: 0 }}/>
+        <div ref={mapRef} style={{ position: "absolute", inset: 0 }} />
       </div>
 
       <style>{`
@@ -514,11 +724,33 @@ function Simulator() {
 
 function Stat({ label, value, mono, accent }) {
   return (
-    <div style={{ padding: "14px 16px", background: "var(--bg)", borderRight: "1px solid var(--hairline)" }}>
-      <div className="mono" style={{ fontSize: 10, letterSpacing: "0.12em", color: "var(--fg-muted)", textTransform: "uppercase" }}>
+    <div
+      style={{
+        padding: "14px 16px",
+        background: "var(--bg)",
+        borderRight: "1px solid var(--hairline)",
+      }}
+    >
+      <div
+        className="mono"
+        style={{
+          fontSize: 10,
+          letterSpacing: "0.12em",
+          color: "var(--fg-muted)",
+          textTransform: "uppercase",
+        }}
+      >
         {label}
       </div>
-      <div className={mono ? "mono" : "display"} style={{ fontSize: 24, marginTop: 4, color: accent ? "var(--accent)" : "var(--fg)", fontWeight: 500 }}>
+      <div
+        className={mono ? "mono" : "display"}
+        style={{
+          fontSize: 24,
+          marginTop: 4,
+          color: accent ? "var(--accent)" : "var(--fg)",
+          fontWeight: 500,
+        }}
+      >
         {value}
       </div>
     </div>
@@ -527,8 +759,24 @@ function Stat({ label, value, mono, accent }) {
 
 function LegendRow({ color, label }) {
   return (
-    <div style={{ display: "flex", gap: 10, alignItems: "center", fontSize: 13, color: "var(--fg-dim)" }}>
-      <span style={{ width: 10, height: 10, borderRadius: "50%", background: color, boxShadow: `0 0 8px ${color}` }}/>
+    <div
+      style={{
+        display: "flex",
+        gap: 10,
+        alignItems: "center",
+        fontSize: 13,
+        color: "var(--fg-dim)",
+      }}
+    >
+      <span
+        style={{
+          width: 10,
+          height: 10,
+          borderRadius: "50%",
+          background: color,
+          boxShadow: `0 0 8px ${color}`,
+        }}
+      />
       {label}
     </div>
   );
