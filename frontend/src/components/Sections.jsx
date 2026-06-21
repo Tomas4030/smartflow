@@ -593,10 +593,10 @@ export function DiagramNode({ cx, cy, label, sub, emphasized }) {
         rx="6"
         fill={
           emphasized
-            ? "color-mix(in oklch, var(--accent) 14%, var(--surface))" 
+            ? "color-mix(in oklch, var(--accent) 14%, var(--surface))"
             : "var(--surface)"
         }
-        stroke={emphasized ? "var(--accent)"  : "var(--hairline-2)"}
+        stroke={emphasized ? "var(--accent)" : "var(--hairline-2)"}
       />
       <text
         x={cx}
@@ -629,7 +629,7 @@ export function TimeSaved() {
   const [showTimeSaved, setShowTimeSaved] = useState(false);
 
   // Sped up durations to keep the entire experience snappy
-  const slowDuration = 4.0; 
+  const slowDuration = 4.0;
   const fastDuration = 4.0 * (688 / 1122); // ~2.45 seconds
 
   useEffect(() => {
@@ -637,7 +637,7 @@ export function TimeSaved() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsInView(true);
-          
+
           // Pops up the exact moment the FAST track finishes its run
           const timer = setTimeout(() => {
             setShowTimeSaved(true);
@@ -646,7 +646,7 @@ export function TimeSaved() {
           return () => clearTimeout(timer);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     if (ref.current) {
@@ -669,7 +669,7 @@ export function TimeSaved() {
             sub={t.timesaved.body}
           />
         </Reveal>
-        
+
         <div
           style={{
             display: "flex",
@@ -688,7 +688,9 @@ export function TimeSaved() {
           <RaceTrack
             label={t === SF_I18N.pt ? "COM Smart Flow" : "WITH Smart Flow"}
             time="00:11:28"
-            timeSaved={t === SF_I18N.pt ? "Poupança: 00:07:14" : "Saved: 00:07:14"}
+            timeSaved={
+              t === SF_I18N.pt ? "Poupança: 00:07:14" : "Saved: 00:07:14"
+            }
             showTimeSaved={showTimeSaved}
             color="var(--green)"
             progress={isInView ? 1 : 0}
@@ -701,15 +703,15 @@ export function TimeSaved() {
   );
 }
 
-export function RaceTrack({ 
-  label, 
-  time, 
-  timeSaved, 
-  showTimeSaved, 
-  color, 
-  progress, 
-  duration, 
-  highlight 
+export function RaceTrack({
+  label,
+  time,
+  timeSaved,
+  showTimeSaved,
+  color,
+  progress,
+  duration,
+  highlight,
 }) {
   return (
     <div
@@ -729,7 +731,7 @@ export function RaceTrack({
           className="mono"
           style={{
             position: "absolute",
-            top: -16, 
+            top: -16,
             right: 24,
             background: "var(--green)",
             color: "var(--surface)",
@@ -740,18 +742,22 @@ export function RaceTrack({
             display: "flex",
             alignItems: "center",
             gap: 6,
-            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2), 0 0 12px color-mix(in oklch, var(--green) 30%, transparent)",
+            boxShadow:
+              "0 8px 20px rgba(0, 0, 0, 0.2), 0 0 12px color-mix(in oklch, var(--green) 30%, transparent)",
             zIndex: 10,
             opacity: showTimeSaved ? 1 : 0,
-            transform: showTimeSaved ? "translateY(0) scale(1)" : "translateY(8px) scale(0.85)",
-            transition: "opacity 0.3s ease-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            transform: showTimeSaved
+              ? "translateY(0) scale(1)"
+              : "translateY(8px) scale(0.85)",
+            transition:
+              "opacity 0.3s ease-out, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)",
             pointerEvents: "none",
           }}
         >
           <span>⚡</span>
           <span>{timeSaved}</span>
-          
-          <div 
+
+          <div
             style={{
               position: "absolute",
               bottom: -4,
@@ -773,7 +779,7 @@ export function RaceTrack({
           alignItems: "center",
           flexWrap: "wrap",
           gap: 12,
-          width: "100%"
+          width: "100%",
         }}
       >
         <div
@@ -786,12 +792,12 @@ export function RaceTrack({
         >
           {label}
         </div>
-        
+
         <div className="mono" style={{ fontSize: 22, color }}>
           {time}
         </div>
       </div>
-      
+
       <div
         style={{
           position: "relative",
@@ -814,7 +820,7 @@ export function RaceTrack({
           }}
         />
       </div>
-      
+
       <div style={{ position: "relative", marginTop: 10, height: 22 }}>
         <div
           className="mono"
@@ -1044,7 +1050,7 @@ export function Compare() {
         style={{
           position: "absolute",
           inset: 0,
-        
+
           opacity: 0.8,
           pointerEvents: "none",
         }}
@@ -1226,7 +1232,6 @@ export function Pricing() {
     </section>
   );
 }
-
 export function PricingCard({ title, lines, total, secondary }) {
   return (
     <div
@@ -1560,8 +1565,8 @@ export function Contact() {
 }
 
 export function SOSFeature() {
-  const [t] = useT()
-  const colors = ["var(--red)", "var(--amber)", "var(--cyan)", "var(--green)"]
+  const [t] = useT();
+  const colors = ["var(--red)", "var(--amber)", "var(--cyan)", "var(--green)"];
 
   return (
     <section
@@ -1658,8 +1663,8 @@ export function SOSFeature() {
                       i === 0
                         ? "radial-gradient(circle at 0% 0%, color-mix(in oklch, var(--red) 18%, transparent), transparent 52%)"
                         : i === 3
-                        ? "radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 52%)"
-                        : "none",
+                          ? "radial-gradient(circle at 100% 0%, color-mix(in oklch, var(--accent) 16%, transparent), transparent 52%)"
+                          : "none",
                     pointerEvents: "none",
                   }}
                 />
@@ -1748,7 +1753,16 @@ export function SOSFeature() {
               alignItems: "flex-start",
             }}
           >
-            <span style={{ fontSize: 14, flexShrink: 0, opacity: 0.7, marginTop: 1 }}>ℹ</span>
+            <span
+              style={{
+                fontSize: 14,
+                flexShrink: 0,
+                opacity: 0.7,
+                marginTop: 1,
+              }}
+            >
+              ℹ
+            </span>
             <p
               className="mono"
               style={{
@@ -1774,7 +1788,7 @@ export function SOSFeature() {
         }
       `}</style>
     </section>
-  )
+  );
 }
 
 export function Footer() {

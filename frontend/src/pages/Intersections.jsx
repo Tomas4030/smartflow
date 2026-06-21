@@ -21,7 +21,7 @@ function IcoEmpty() {
 }
 
 const STATUS_MAP = {
-  idle: { label: "Inativo", color: "var(--cyan)", bg: "color-mix(in oklch, var(--cyan) 9%, transparent)", border: "color-mix(in oklch, var(--cyan) 22%, transparent)", pulse: false },
+  idle: { label: "Ativo", color: "var(--cyan)", bg: "color-mix(in oklch, var(--cyan) 9%, transparent)", border: "color-mix(in oklch, var(--cyan) 22%, transparent)", pulse: false },
   priority: { label: "Prioridade", color: "var(--red)", bg: "color-mix(in oklch, var(--red) 10%, transparent)", border: "color-mix(in oklch, var(--red) 25%, transparent)", pulse: true },
   offline: { label: "Offline", color: "var(--fg-muted)", bg: "color-mix(in oklch, var(--surface) 70%, transparent)", border: "var(--hairline)", pulse: false },
   pending: { label: "Pendente", color: "var(--amber)", bg: "color-mix(in oklch, var(--amber) 10%, transparent)", border: "color-mix(in oklch, var(--amber) 28%, transparent)", pulse: false },

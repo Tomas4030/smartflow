@@ -1,4 +1,7 @@
-.PHONY: dev setup stop prod seed reset logs
+.PHONY: all dev setup stop prod seed reset logs
+
+# Default target
+all: setup dev
 
 # ══════════════════════════════════════════════════════════════
 #  SmartFlow — Makefile

@@ -32,11 +32,14 @@ export default function ClientLogin() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg)" }}>
-      <header style={{ height: 68, display: "flex", alignItems: "center", padding: "0 24px", borderBottom: "1px solid var(--hairline)", background: "color-mix(in oklch, var(--bg) 82%, transparent)" }}>
-        <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <Logomark size={22} />
-          <span className="display" style={{ fontSize: 17, fontWeight: 600 }}>Smart<span style={{ color: "var(--accent)" }}>Flow</span> <span style={{ color: "var(--red)", fontSize: 13 }}>SOS</span></span>
-        </Link>
+      <header style={{ height: 68, borderBottom: "1px solid var(--hairline)", background: "transparent" }}>
+        <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "100%" }}>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <Logomark size={22} />
+            <span className="display" style={{ fontSize: 18, fontWeight: 600, letterSpacing: "-0.02em" }}>Smart<span style={{ color: "var(--accent)" }}>Flow</span> <span style={{ color: "var(--red)", fontSize: 12 }}>SOS</span></span>
+          </Link>
+          <Link to="/client/register" style={{ padding: "6px 12px", fontSize: 13, color: "var(--fg-dim)", borderRadius: "var(--radius-sm)", border: "1px solid var(--hairline)", textDecoration: "none" }}>Registar</Link>
+        </div>
       </header>
       <main style={{ flex: 1, display: "grid", placeItems: "center", padding: "40px 20px" }}>
         <form onSubmit={handleSubmit} style={{ background: "var(--bg-2)", border: "1px solid var(--hairline)", borderRadius: "var(--radius-lg)", padding: "36px 32px", width: "100%", maxWidth: 420, display: "flex", flexDirection: "column", gap: 18, boxShadow: "0 28px 64px -20px rgba(0,0,0,0.4)" }}>
@@ -59,6 +62,13 @@ export default function ClientLogin() {
           </button>
           <p style={{ textAlign: "center", fontSize: 13, color: "var(--fg-muted)", margin: 0 }}>
             Não tem conta? <Link to="/client/register" style={{ color: "var(--accent)", fontWeight: 500 }}>Registar</Link>
+          </p>
+
+          <p style={{ marginTop: 16, textAlign: "center", fontSize: 13, color: "var(--fg-muted)", margin: "16px 0 0" }}>
+            És um município?{" "}
+            <Link to="/login" style={{ color: "var(--accent)", fontWeight: 500, textDecoration: "none" }}>
+              Aceder ao painel municipal
+            </Link>
           </p>
         </form>
       </main>

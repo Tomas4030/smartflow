@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AUTH } from "../auth.js";
 
 const STATUS_MAP = {
-  idle: { label: "Inativo", color: "var(--cyan)", bg: "color-mix(in oklch, var(--cyan) 9%, transparent)", border: "color-mix(in oklch, var(--cyan) 22%, transparent)" },
+  idle: { label: "Ativo", color: "var(--cyan)", bg: "color-mix(in oklch, var(--cyan) 9%, transparent)", border: "color-mix(in oklch, var(--cyan) 22%, transparent)" },
   priority: { label: "Prioridade", color: "var(--red)", bg: "color-mix(in oklch, var(--red) 10%, transparent)", border: "color-mix(in oklch, var(--red) 25%, transparent)" },
   offline: { label: "Offline", color: "var(--fg-muted)", bg: "color-mix(in oklch, var(--surface) 70%, transparent)", border: "var(--hairline)" },
   pending: { label: "Pendente", color: "var(--amber)", bg: "color-mix(in oklch, var(--amber) 10%, transparent)", border: "color-mix(in oklch, var(--amber) 28%, transparent)" },
@@ -79,10 +79,9 @@ export default function SuperAdminDashboard() {
         <Card label="Offline" value={totalOffline} color="var(--fg-muted)" />
       </div>
 
-    
       {/* Municipalities + Intersections */}
-      <section>
-        <h2 style={{ fontSize: 16, fontFamily: "var(--font-display)", fontWeight: 600, marginBottom: 16 }}>Municípios &amp; Interseções</h2>
+      <section style={{ minHeight: "auto" }}>
+        <h2 style={{ fontSize: 16, fontFamily: "var(--font-display)", fontWeight: 600, margin: "0 0 16px" }}>Municípios &amp; Interseções</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {municipalities.map((mun) => (
             <div key={mun.id} style={{ background: "var(--surface)", border: "1px solid var(--hairline)", borderRadius: "var(--radius)", overflow: "hidden" }}>

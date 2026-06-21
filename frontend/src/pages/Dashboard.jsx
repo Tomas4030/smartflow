@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AUTH } from "../auth";
-import { StatCards, MonitoringMap, EventsTable } from "../components/dashboard";
+import { StatCards, MonitoringMap } from "../components/dashboard";
+import { EventsPage } from "./Events";
 
 function DashboardContent({ intersections, events, municipality }) {
   return (
@@ -49,7 +50,7 @@ function DashboardContent({ intersections, events, municipality }) {
             Ver todos →
           </Link>
         </div>
-        <EventsTable events={events} />
+        <EventsPage limit={5} embedded />
       </div>
     </div>
   );
