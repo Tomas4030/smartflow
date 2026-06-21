@@ -153,14 +153,11 @@ async function main() {
       });
     }
 
-    // Reflect active events on their intersections
-    const active = await prisma.detectionEvent.findMany({ where: { resolvedAt: null } });
-    for (const e of active) {
-      await prisma.intersection.update({
-        where: { id: e.intersectionId },
-        data:  { status: "priority" },
-      });
-    }
+    // Resolve all seeded events so intersections start as idle
+    await prisma.detectionEvent.updateMany({
+      where: { resolvedAt: null },
+      data: { resolvedAt: new Date() },
+    });
 
     console.log(`  ✓ ${events.length} detection events seeded`);
   }
