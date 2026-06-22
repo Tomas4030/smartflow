@@ -55,8 +55,8 @@ function IconSpinner() {
 export default function LoginPage() {
   const navigate = useNavigate();
   const [theme, setTheme] = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("admin@albufeira.pt");
+  const [password, setPassword] = useState("password");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);

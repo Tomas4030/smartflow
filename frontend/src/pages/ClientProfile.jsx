@@ -12,21 +12,21 @@ import "leaflet/dist/leaflet.css";
 import { Logomark } from "../components/Logomark";
 
 const initialForm = {
-  name: "",
-  phone: "",
-  address: "",
-  addressFloor: "",
-  addressDoor: "",
-  lat: null,
-  lng: null,
-  age: "",
-  bloodType: "",
-  conditions: "",
-  allergies: "",
-  medication: "",
-  emergencyName: "",
-  emergencyPhone: "",
-  notes: "",
+  name: "Maria João Santos",
+  phone: "912 345 678",
+  address: "Rua 5 de Outubro, nº 28, 8000-078 Faro",
+  addressFloor: "2º Dto.",
+  addressDoor: "Porta A",
+  lat: 37.0194,
+  lng: -7.9322,
+  age: "34",
+  bloodType: "A+",
+  conditions: "Diabetes tipo 2, hipertensão arterial",
+  allergies: "Penicilina, ibuprofeno",
+  medication: "Metformina 500mg (manhã), Ramipril 5mg (noite)",
+  emergencyName: "António Santos",
+  emergencyPhone: "916 789 012",
+  notes: "Porta amarela no 2º andar. Cão pequeno em casa (não morde). Chave de reserva com o vizinho do 1º Dto.",
 };
 
 const sections = [
@@ -65,21 +65,21 @@ function getHeaders() {
 
 function normalizeProfile(data) {
   return {
-    name: data?.name || "",
-    phone: data?.phone || "",
-    address: data?.address || "",
-    addressFloor: data?.addressFloor || "",
-    addressDoor: data?.addressDoor || "",
-    lat: data?.lat ? Number(data.lat) : null,
-    lng: data?.lng ? Number(data.lng) : null,
-    age: data?.age || "",
-    bloodType: data?.bloodType || "",
-    conditions: data?.conditions || "",
-    allergies: data?.allergies || "",
-    medication: data?.medication || "",
-    emergencyName: data?.emergencyName || "",
-    emergencyPhone: data?.emergencyPhone || "",
-    notes: data?.notes || "",
+    name: data?.name || initialForm.name,
+    phone: data?.phone || initialForm.phone,
+    address: data?.address || initialForm.address,
+    addressFloor: data?.addressFloor || initialForm.addressFloor,
+    addressDoor: data?.addressDoor || initialForm.addressDoor,
+    lat: data?.lat ? Number(data.lat) : initialForm.lat,
+    lng: data?.lng ? Number(data.lng) : initialForm.lng,
+    age: data?.age || initialForm.age,
+    bloodType: data?.bloodType || initialForm.bloodType,
+    conditions: data?.conditions || initialForm.conditions,
+    allergies: data?.allergies || initialForm.allergies,
+    medication: data?.medication || initialForm.medication,
+    emergencyName: data?.emergencyName || initialForm.emergencyName,
+    emergencyPhone: data?.emergencyPhone || initialForm.emergencyPhone,
+    notes: data?.notes || initialForm.notes,
   };
 }
 

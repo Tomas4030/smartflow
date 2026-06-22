@@ -101,16 +101,16 @@ export function Nav() {
           style={{ display: "flex", gap: 4, alignItems: "center" }}
           className="sf-nav-links"
         >
-          <a href="#solution" style={linkSty}>
+          <a href="#top" style={linkSty}>
             {t.nav.product}
           </a>
-          <a href="#sos" style={linkSty}>
+          <a href="#solution" style={linkSty}>
             {t.nav.how}
           </a>
           <a href="#market" style={linkSty}>
             {t.nav.why}
           </a>
-          <a href="#roadmap" style={linkSty}>
+          <a href="#sos" style={linkSty}>
             {t.nav.sos}
           </a>
           <a href="#contact" style={linkSty}>

@@ -4,10 +4,10 @@ import { Logomark } from "../components/Logomark";
 
 export default function ClientRegister() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("Maria João Santos");
+  const [email, setEmail] = useState("maria.santos@email.com");
+  const [password, setPassword] = useState("demo1234");
+  const [phone, setPhone] = useState("912 345 678");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 

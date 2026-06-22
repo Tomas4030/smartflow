@@ -4,8 +4,8 @@ import { Logomark } from "../components/Logomark";
 
 export default function ClientLogin() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("maria.santos@email.com");
+  const [password, setPassword] = useState("demo1234");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
