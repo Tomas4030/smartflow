@@ -45,6 +45,10 @@ app.use((err, req, res, next) => {
     error: err.message || "Internal server error"
   });
 });
-app.listen(PORT, () => {
-  console.log(`SmartFlow API running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`SmartFlow API running on port ${PORT}`);
+  });
+}
+
+module.exports = app;

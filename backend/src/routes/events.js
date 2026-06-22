@@ -121,9 +121,13 @@ router.post('/trigger', async (req, res) => {
       }),
     ]);
 
-    console.log(
-      `[TRIGGER] intersectionId=${intersectionId} municipality=${municipalityId} at=${new Date().toISOString()}`
-    );
+    console.log(JSON.stringify({
+      level: 'info',
+      event: 'TRIGGER',
+      intersectionId,
+      municipality: municipalityId,
+      timestamp: new Date().toISOString(),
+    }));
 
     res.status(201).json(event);
   } catch (err) {
@@ -162,9 +166,16 @@ router.post('/:id/resolve', async (req, res) => {
       }),
     ]);
 
-    console.log(
-      `[RESOLVE] intersectionId=${event.intersectionId} municipality=${municipalityId} at=${new Date().toISOString()}`
-    );
+    console.log(JSON.stringify({
+      level: 'info',
+      event: 'RESOLVE',
+      intersectionId: event.intersectionId,
+      municipality: municipalityId,
+      duration: updatedEvent.resolvedAt
+        ? (new Date(updatedEvent.resolvedAt) - new Date(event.detectedAt)) / 1000
+        : null,
+      timestamp: new Date().toISOString(),
+    }));
 
     res.json(updatedEvent);
   } catch (err) {
