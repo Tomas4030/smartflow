@@ -1,4 +1,4 @@
-.PHONY: all dev setup stop prod seed reset logs
+.PHONY: all dev setup stop prod seed reset logs test
 
 # Default target
 all: setup dev
@@ -88,3 +88,17 @@ reset:
 #   Tail logs from all containers.
 logs:
 	docker compose logs -f
+
+# ── Tests ─────────────────────────────────────────────────────
+
+# make test
+#   Run all backend unit tests.
+test:
+	cd backend && npm test
+	@echo ""
+	@echo "  Cobertura dos testes:"
+	@echo "  ✓ Auth: login válido, password errada e utilizador inexistente"
+	@echo "  ✓ Citizens: login, email duplicado, proteção JWT e passwordHash"
+	@echo "  ✓ Admin: acesso superadmin e aprovação de cruzamentos pendentes"
+	@echo "  ✓ Intersections: município, permissões, coordenadas e criação"
+	@echo "  ✓ Events: trigger, isolamento por município, resolve e logs"
