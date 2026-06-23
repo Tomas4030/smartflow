@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Logomark } from "../components/Logomark";
 
 const SOS_CALL_AUDIO_SRC = "/audio/conversa.mp3";
-const SOS_CALL_AUDIO_RATE = 1.25;
+const SOS_CALL_AUDIO_RATE = 1.50;
 
 function getHeaders() {
   return {
