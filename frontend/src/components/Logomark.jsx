@@ -7,17 +7,23 @@ export function Logomark({ size = 24 }) {
         width="23"
         height="23"
         rx="6"
+        fill="var(--accent)"
+        fillOpacity="0.12"
         stroke="var(--accent)"
-        strokeOpacity="0.55"
+        strokeWidth="1"
+        strokeOpacity="0.65"
       />
-      <path
-        d="M5 15 C 8 15, 8 9, 12 9 C 16 9, 16 15, 19 15"
-        stroke="var(--accent)"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <circle cx="12" cy="12" r="1.6" fill="var(--accent)" />
+      <text
+        x="12"
+        y="16"
+        textAnchor="middle"
+        fontFamily="'Space Grotesk', system-ui, sans-serif"
+        fontWeight="700"
+        fontSize="9.5"
+        fill="var(--accent)"
+      >
+        SF
+      </text>
     </svg>
   );
 }
