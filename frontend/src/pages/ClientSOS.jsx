@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Logomark } from "../components/Logomark";
 
+const SOS_CALL_AUDIO_SRC = "/audio/conversa.mp3";
+const SOS_CALL_AUDIO_RATE = 1.25;
+
 function getHeaders() {
   return {
     "Content-Type": "application/json",
@@ -367,6 +370,7 @@ export default function ClientSOS() {
   const [visibleMsgs, setVisibleMsgs] = useState(0);
   const [transcriptDone, setTranscriptDone] = useState(false);
   const timerRef = useRef(null);
+  const callAudioRef = useRef(null);
 
   useEffect(() => {
     if (!localStorage.getItem("citizen_token")) {
@@ -393,6 +397,12 @@ export default function ClientSOS() {
     setVisibleMsgs(0);
     setTranscriptDone(false);
     setResult(null);
+    if (!callAudioRef.current) {
+      callAudioRef.current = new Audio(SOS_CALL_AUDIO_SRC);
+      callAudioRef.current.preload = "auto";
+    }
+    callAudioRef.current.currentTime = 0;
+    callAudioRef.current.load();
 
     try {
       const res = await fetch("/api/citizens/sos", {
@@ -408,14 +418,28 @@ export default function ClientSOS() {
 
   // Call timer
   useEffect(() => {
-    if (phase === "call") {
-      timerRef.current = setInterval(() => setElapsed((e) => e + 1), 1000);
-      const t = setTimeout(() => setPhase("transcript"), 6000);
-      return () => {
-        clearInterval(timerRef.current);
-        clearTimeout(t);
-      };
-    }
+    if (phase !== "call") return;
+
+    const audio = callAudioRef.current || new Audio(SOS_CALL_AUDIO_SRC);
+    callAudioRef.current = audio;
+    audio.currentTime = 0;
+    audio.playbackRate = SOS_CALL_AUDIO_RATE;
+
+    timerRef.current = setInterval(() => setElapsed((e) => e + 1), 1000);
+
+    let fallbackTimer = null;
+    const finishCall = () => setPhase("transcript");
+    audio.addEventListener("ended", finishCall);
+    audio.play().catch(() => {
+      fallbackTimer = setTimeout(finishCall, 6000);
+    });
+
+    return () => {
+      clearInterval(timerRef.current);
+      clearTimeout(fallbackTimer);
+      audio.removeEventListener("ended", finishCall);
+      audio.pause();
+    };
   }, [phase]);
 
   // Transcript typewriter
@@ -431,6 +455,7 @@ export default function ClientSOS() {
   }, [phase, visibleMsgs]);
 
   function resetSOS() {
+    callAudioRef.current?.pause();
     setPhase("idle");
     setResult(null);
     setElapsed(0);
