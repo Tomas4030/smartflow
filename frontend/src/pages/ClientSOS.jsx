@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Logomark } from "../components/Logomark";
 
 const SOS_CALL_AUDIO_SRC = "/audio/conversa.mp3";
-const SOS_CALL_AUDIO_RATE = 1.20;
+const SOS_CALL_AUDIO_RATE = 1.2;
 
 function getHeaders() {
   return {
@@ -336,7 +336,7 @@ function TranscriptPhase({
         )}
         <div ref={endRef} />
       </div>
-    
+
       {done && (
         <div style={{ textAlign: "center", marginTop: 20 }}>
           <button
@@ -730,6 +730,7 @@ export default function ClientSOS() {
 
 function buildChatMessages(citizen, result) {
   const name = citizen?.name || "Cidadão";
+  const age = citizen?.age ? `${citizen.age}` : "idade desconhecida";
   const location =
     citizen?.address || "localização GPS enviada automaticamente";
   const medicalData = citizen?.conditions
@@ -737,34 +738,30 @@ function buildChatMessages(citizen, result) {
     : "Sem condições médicas registadas no perfil.";
 
   return [
-    { from: "op", text: "112, qual é a sua emergência?" },
+    { from: "op", text: "112. Diga, por favor, qual é a emergência?" },
     {
       from: "bot",
-      text: "Sou o assistente automático do SmartFlow SOS. O utilizador acionou um pedido de emergência médica e poderá não conseguir falar.",
+      text: "Foi ativado um alerta médico automático pelo sistema Smart Flow SOS. A pessoa pode não conseguir falar.",
     },
     {
       from: "bot",
-      text: `Utente: ${name}. Solicito o envio de uma ambulância.`,
+      text: `A pessoa chama-se ${name}, sexo Feminino, ${age} anos.`,
     },
     {
       from: "bot",
-      text: `Localização: ${location}.`,
+      text: "É necessária uma ambulância com urgência.",
     },
     {
       from: "bot",
-      text: medicalData,
+      text: `A localização atual é ${location}.`,
+    },
+    {
+      from: "bot",
+      text: `Existem condições médicas: ${medicalData}.`,
     },
     {
       from: "op",
-      text: "Dados recebidos. Ambulância despachada para a localização indicada.",
-    },
-    {
-      from: "op",
-      text: "O SmartFlow Municipal está a preparar a prioridade semafórica no percurso. Tempo estimado de chegada: 4 minutos.",
-    },
-    {
-      from: "bot",
-      text: "Confirmação recebida. O SmartFlow SOS continuará a partilhar a localização e os dados essenciais até à chegada da equipa.",
+      text: "Recebido. Já foi acionada uma ambulância para a localização indicada. O tempo estimado de chegada é de quatro minutos.",
     },
   ];
 }
