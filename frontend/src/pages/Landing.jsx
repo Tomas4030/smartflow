@@ -77,12 +77,12 @@ export default function App() {
       <Intro />
       <Problem />
       <Solution />
-      <SOSFeature />
       <TimeSaved />
       <Market />
-      <Roadmap />
       <Compare />
+      <Roadmap />
       <Pricing />
+      <SOSFeature />
       <Team />
       <Contact />
       <Footer />
