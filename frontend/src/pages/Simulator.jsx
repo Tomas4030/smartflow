@@ -5,10 +5,10 @@ import 'leaflet/dist/leaflet.css'
 import { useT, useTheme } from '../shared'
 import { Logomark } from '../components/Logomark'
 
-const ALBUFEIRA = [37.0891, -8.2499]
+const ALBUFEIRA = [37.0930, -8.2470]
 
 const SCENE = {
-  hospital: { id: 'hosp', name: 'Hospital de Albufeira', lat: 37.10120, lng: -8.24350 },
+  hospital: { id: 'hosp', name: 'Hospital Lusíadas Albufeira', lat: 37.1028666, lng: -8.2332937 },
   call:     { id: 'call', name: 'Chamada · Av. dos Descobrimentos', lat: 37.07980, lng: -8.27050 },
   ambStart: { id: 'amb',  name: 'Quartel de Bombeiros', lat: 37.09870, lng: -8.26210 },
 }
@@ -57,29 +57,33 @@ function posAlong(pts, p) {
   return pts[pts.length - 1]
 }
 
-function sampleIntersections(routePts, count = 6) {
-  if (routePts.length < 4) return []
+function sampleLegLights(legPts, leg) {
+  if (legPts.length < 2) return []
+  const { total } = polylineLengths(legPts)
+  const count = Math.max(3, Math.min(7, Math.round(total / 0.0045)))
   const out = []
-  const startSkip = Math.floor(routePts.length * 0.12)
-  const endSkip = Math.floor(routePts.length * 0.88)
-  const usable = endSkip - startSkip
-  if (usable <= 0) return []
   for (let i = 0; i < count; i++) {
-    const idx = startSkip + Math.floor((i + 1) * usable / (count + 1))
-    const p = routePts[idx]
-    out.push({ id: `int_${i}`, lat: p[0], lng: p[1], routeIdx: idx })
+    const p = (i + 1) / (count + 1)
+    const [lat, lng] = posAlong(legPts, p)
+    out.push({ leg, p, lat, lng })
   }
   return out
 }
 
+function buildIntersections(pickup, hosp) {
+  const all = [...sampleLegLights(pickup, 'pickup'), ...sampleLegLights(hosp, 'hosp')]
+  return all.map((o, i) => ({ ...o, id: `int_${i}` }))
+}
+
 export default function Simulator() {
-  const [t, lang] = useT()
+  const [t] = useT()
   const [theme] = useTheme()
   const mapRef = useRef(null)
   const mapInstance = useRef(null)
   const intMarkersRef = useRef({})
   const ambMarkerRef = useRef(null)
   const polylineRef = useRef(null)
+  const bgPolylineRef = useRef(null)
 
   const [routePickup, setRoutePickup] = useState(null)
   const [routeHosp, setRouteHosp] = useState(null)
@@ -91,9 +95,14 @@ export default function Simulator() {
   const [smartFlow, setSmartFlow] = useState(true)
   const [preempted, setPreempted] = useState(0)
   const [tickMs, setTickMs] = useState(0)
+  const [wastedMs, setWastedMs] = useState(0)
   const [lightStates, setLightStates] = useState({})
 
-  const PREEMPT_DIST = 0.0025
+  const progressRef = useRef(0)
+  const lightStatesRef = useRef({})
+  useEffect(() => { lightStatesRef.current = lightStates }, [lightStates])
+
+  const sceneLeg = (status === 'hospital' || status === 'arrived') ? 'hosp' : 'pickup'
 
   useEffect(() => {
     let alive = true
@@ -106,8 +115,7 @@ export default function Simulator() {
       if (!alive) return
       setRoutePickup(pickup)
       setRouteHosp(hosp)
-      const fullRoute = [...pickup, ...hosp]
-      const ints = sampleIntersections(fullRoute, 6)
+      const ints = buildIntersections(pickup, hosp)
       setIntersections(ints)
       const initLights = {}
       ints.forEach(i => { initLights[i.id] = 'red' })
@@ -172,22 +180,25 @@ export default function Simulator() {
     Object.values(intMarkersRef.current).forEach(m => m.remove())
     intMarkersRef.current = {}
 
-    intersections.forEach(int => {
-      const m = L.marker([int.lat, int.lng], {
-        icon: L.divIcon({
-          className: 'sf-icon',
-          html: `<div class="sf-int sf-int-red" data-id="${int.id}"></div>`,
-          iconSize: [16, 16], iconAnchor: [8, 8],
-        }),
-      }).addTo(mapInstance.current)
-      intMarkersRef.current[int.id] = m
-    })
+    intersections
+      .filter(int => int.leg === sceneLeg)
+      .forEach(int => {
+        const m = L.marker([int.lat, int.lng], {
+          icon: L.divIcon({
+            className: 'sf-icon',
+            html: `<div class="sf-int sf-int-red" data-id="${int.id}"></div>`,
+            iconSize: [16, 16], iconAnchor: [8, 8],
+          }),
+        }).addTo(mapInstance.current)
+        intMarkersRef.current[int.id] = m
+      })
 
     if (routePickup && routeHosp) {
+      if (bgPolylineRef.current) bgPolylineRef.current.remove()
       const full = [...routePickup, ...routeHosp]
-      L.polyline(full, { color: '#a78bfa', weight: 2, opacity: 0.25 }).addTo(mapInstance.current)
+      bgPolylineRef.current = L.polyline(full, { color: '#a78bfa', weight: 2, opacity: 0.25 }).addTo(mapInstance.current)
     }
-  }, [intersections, routePickup, routeHosp])
+  }, [intersections, routePickup, routeHosp, sceneLeg])
 
   useEffect(() => {
     Object.entries(lightStates).forEach(([id, state]) => {
@@ -209,13 +220,15 @@ export default function Simulator() {
       if (smartFlow) return
       setLightStates(prev => {
         const next = { ...prev }
+        let changed = false
         intersections.forEach((int, idx) => {
           const phase = Math.floor(Date.now() / 6000) + idx
-          next[int.id] = phase % 2 === 0 ? 'green' : 'red'
+          const state = phase % 2 === 0 ? 'green' : 'red'
+          if (next[int.id] !== state) { next[int.id] = state; changed = true }
         })
-        return next
+        return changed ? next : prev
       })
-    }, 500)
+    }, 1000)
     return () => clearInterval(cycle)
   }, [smartFlow, intersections])
 
@@ -224,102 +237,114 @@ export default function Simulator() {
     if (!routePickup || !routeHosp) return
 
     const route = status === 'dispatched' ? routePickup : routeHosp
+    const leg = status === 'dispatched' ? 'pickup' : 'hosp'
     const { total } = polylineLengths(route)
     const baseSpeed = total * 0.06
+    const PREEMPT = 0.12
+    const SLOW_ZONE = 0.015
 
     let raf
     let last = performance.now()
     const step = (now) => {
-      const dt = (now - last) / 1000
+      const dt = Math.min((now - last) / 1000, 0.05)
       last = now
 
-      setProgress(prev => {
-        const pos = posAlong(route, prev)
+      const prog = progressRef.current
+      let slowedAtRed = false
 
-        if (smartFlow) {
-          intersections.forEach(int => {
-            const dx = int.lat - pos[0]
-            const dy = int.lng - pos[1]
-            const d = Math.hypot(dx, dy)
-            if (d < PREEMPT_DIST * 1.4) {
-              setLightStates(ls => {
-                if (ls[int.id] === 'green') return ls
-                setPreempted(p => p + 1)
-                return { ...ls, [int.id]: 'green' }
-              })
-            }
-          })
-        }
-
-        let speed = baseSpeed
-        if (!smartFlow) {
-          for (const int of intersections) {
-            const dx = int.lat - pos[0]
-            const dy = int.lng - pos[1]
-            const d = Math.hypot(dx, dy)
-            if (d < 0.0006 && lightStates[int.id] === 'red') {
-              speed = baseSpeed * 0.06
-              break
-            }
+      if (smartFlow) {
+        const nextLights = { ...lightStatesRef.current }
+        let changed = false
+        let newGreens = 0
+        for (const int of intersections) {
+          const approaching = int.leg === leg && prog >= int.p - PREEMPT && prog < int.p
+          const desired = approaching ? 'green' : 'red'
+          if (nextLights[int.id] !== desired) {
+            if (desired === 'green') newGreens++
+            nextLights[int.id] = desired
+            changed = true
           }
         }
-
-        const advance = (speed * dt) / total
-        const next = prev + advance
-        setTickMs(ms => ms + dt * 1000)
-
-        if (next >= 1) {
-          if (status === 'dispatched') {
-            setStatus('pickup')
-            setTimeout(() => { setStatus('hospital'); setProgress(0) }, 1800)
-            return 1
-          } else if (status === 'hospital') {
-            setStatus('arrived')
-            return 1
+        if (changed) {
+          lightStatesRef.current = nextLights
+          setLightStates(nextLights)
+          if (newGreens) setPreempted(p => p + newGreens)
+        }
+      } else {
+        for (const int of intersections) {
+          if (int.leg === leg && Math.abs(prog - int.p) < SLOW_ZONE && lightStatesRef.current[int.id] === 'red') {
+            slowedAtRed = true
+            break
           }
         }
-        return Math.min(next, 1)
-      })
+      }
 
+      const speed = slowedAtRed ? baseSpeed * 0.06 : baseSpeed
+      const next = Math.min(prog + (speed * dt) / total, 1)
+      progressRef.current = next
+      setProgress(next)
+      setTickMs(ms => ms + dt * 1000)
+      if (slowedAtRed) setWastedMs(ms => ms + dt * 1000)
+
+      if (next >= 1) {
+        if (status === 'dispatched') {
+          setStatus('pickup')
+          setTimeout(() => { progressRef.current = 0; setStatus('hospital'); setProgress(0) }, 1800)
+          return
+        } else if (status === 'hospital') {
+          setStatus('arrived')
+          return
+        }
+      }
       raf = requestAnimationFrame(step)
     }
     raf = requestAnimationFrame(step)
     return () => cancelAnimationFrame(raf)
-  }, [status, smartFlow, lightStates, routePickup, routeHosp, intersections])
+  }, [status, smartFlow, routePickup, routeHosp, intersections])
+
+  function activeRoute() {
+    if (status === 'dispatched' || status === 'pickup') return routePickup
+    if (status === 'hospital' || status === 'arrived') return routeHosp
+    return [[SCENE.ambStart.lat, SCENE.ambStart.lng]]
+  }
 
   useEffect(() => {
     if (!ambMarkerRef.current || !routePickup || !routeHosp) return
-    let route
-    if (status === 'dispatched' || status === 'pickup') route = routePickup
-    else if (status === 'hospital' || status === 'arrived') route = routeHosp
-    else route = [[SCENE.ambStart.lat, SCENE.ambStart.lng]]
-
-    ambMarkerRef.current.setLatLng(posAlong(route, progress))
-
-    if (mapInstance.current) {
-      if (polylineRef.current) mapInstance.current.removeLayer(polylineRef.current)
-      if (status !== 'idle' && route.length > 1) {
-        polylineRef.current = L.polyline(route, {
-          color: '#a78bfa', weight: 5, opacity: 0.9,
-        }).addTo(mapInstance.current)
-      }
-    }
+    ambMarkerRef.current.setLatLng(posAlong(activeRoute(), progress))
   }, [progress, status, routePickup, routeHosp])
+
+  useEffect(() => {
+    if (!mapInstance.current || !routePickup || !routeHosp) return
+    const route = activeRoute()
+    if (polylineRef.current) {
+      mapInstance.current.removeLayer(polylineRef.current)
+      polylineRef.current = null
+    }
+    if (status !== 'idle' && route.length > 1) {
+      polylineRef.current = L.polyline(route, {
+        color: '#a78bfa', weight: 5, opacity: 0.9,
+      }).addTo(mapInstance.current)
+    }
+  }, [status, routePickup, routeHosp])
 
   function dispatch() {
     if (status !== 'idle' && status !== 'arrived') return
     if (routesLoading) return
+    progressRef.current = 0
     setStatus('dispatched')
     setProgress(0)
     setPreempted(0)
     setTickMs(0)
+    setWastedMs(0)
   }
 
   function reset() {
+    progressRef.current = 0
     setStatus('idle')
     setProgress(0)
     setPreempted(0)
     setTickMs(0)
+    setWastedMs(0)
     setLightStates(() => {
       const o = {}
       intersections.forEach(i => { o[i.id] = 'red' })
@@ -335,6 +360,7 @@ export default function Simulator() {
   }
 
   const savedSec = smartFlow ? Math.round(tickMs / 1000 * 0.55) : 0
+  const wastedSec = Math.round(wastedMs / 1000)
   const statusLabel = {
     idle: t.sim.status_idle,
     dispatched: t.sim.status_dispatched,
@@ -387,9 +413,7 @@ export default function Simulator() {
         <div>
           <div className="eyebrow" style={{ marginBottom: 8 }}>{t.sim.panel_status}</div>
           <div className="display" style={{ fontSize: 26, fontWeight: 500, lineHeight: 1.15, display: 'flex', alignItems: 'center', gap: 10 }}>
-            {routesLoading
-              ? (lang === 'pt' ? 'A carregar rotas…' : 'Loading routes…')
-              : statusLabel}
+            {routesLoading ? t.sim.loading : statusLabel}
             {status !== 'idle' && status !== 'arrived' && (
               <span style={{
                 width: 8, height: 8, borderRadius: '50%',
@@ -401,8 +425,17 @@ export default function Simulator() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: '1px solid var(--hairline)', borderRadius: 10, overflow: 'hidden' }}>
-          <SimStat label={t.sim.panel_lights} value={preempted} mono />
-          <SimStat label={t.sim.panel_saved} value={`${savedSec}s`} mono accent />
+          {smartFlow ? (
+            <>
+              <SimStat label={t.sim.panel_lights} value={preempted} mono />
+              <SimStat label={t.sim.panel_saved} value={`${savedSec}s`} mono accent />
+            </>
+          ) : (
+            <>
+              <SimStat label={t.sim.panel_reds} value={intersections.length} mono />
+              <SimStat label={t.sim.panel_wasted} value={`${wastedSec}s`} mono red />
+            </>
+          )}
         </div>
 
         <div>
@@ -421,9 +454,7 @@ export default function Simulator() {
             ))}
           </div>
           <p style={{ fontSize: 12, color: 'var(--fg-muted)', marginTop: 10, lineHeight: 1.5 }}>
-            {smartFlow
-              ? (lang === 'pt' ? 'Os semáforos abrem antes da chegada da ambulância.' : 'Lights pre-empt to green before the ambulance arrives.')
-              : (lang === 'pt' ? 'A ambulância segue o ciclo normal e pára nos vermelhos.' : 'The ambulance obeys the normal cycle and stops at red lights.')}
+            {smartFlow ? t.sim.desc_on : t.sim.desc_off}
           </p>
         </div>
 
@@ -440,7 +471,7 @@ export default function Simulator() {
         </div>
 
         <div style={{ borderTop: '1px solid var(--hairline)', paddingTop: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div className="eyebrow">{lang === 'pt' ? 'Legenda' : 'Legend'}</div>
+          <div className="eyebrow">{t.sim.legend}</div>
           <SimLegendRow color="var(--cyan)" label={t.sim.legend_hosp} />
           <SimLegendRow color="var(--red)" label={t.sim.legend_call} />
           <SimLegendRow color="var(--accent)" label={t.sim.legend_amb} />
@@ -448,9 +479,7 @@ export default function Simulator() {
         </div>
 
         <div style={{ marginTop: 'auto', fontSize: 11, color: 'var(--fg-muted)', lineHeight: 1.5 }}>
-          {lang === 'pt'
-            ? 'Rota calculada via OSRM/OpenStreetMap. Os tempos exibidos são ilustrativos.'
-            : 'Route via OSRM/OpenStreetMap. Times shown are illustrative.'}
+          {t.sim.note}
         </div>
       </aside>
 
@@ -488,10 +517,14 @@ export default function Simulator() {
         .sf-int-red { background: var(--red); box-shadow: 0 0 0 1px var(--hairline-2), 0 0 10px var(--red); }
         .sf-int-green { background: var(--green); box-shadow: 0 0 0 1px var(--hairline-2), 0 0 14px var(--green); }
         .sf-amb {
-          font-size: 26px; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
-          animation: sf-amb-pulse 0.6s ease-in-out infinite alternate;
+          font-size: 26px; line-height: 1;
+          filter: drop-shadow(0 4px 8px rgba(0,0,0,.5));
+          animation: sf-amb-pulse 1.4s ease-in-out infinite;
         }
-        @keyframes sf-amb-pulse { from { transform: scale(1) } to { transform: scale(1.08) } }
+        @keyframes sf-amb-pulse {
+          0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 8px rgba(0,0,0,.5)) }
+          50% { transform: scale(1.05); filter: drop-shadow(0 4px 12px rgba(167,139,250,.55)) }
+        }
         .leaflet-container { background: var(--bg) !important; font-family: var(--font-body); }
         .leaflet-tooltip {
           background: var(--surface); color: var(--fg); border: 1px solid var(--hairline); border-radius: 8px;
@@ -512,13 +545,14 @@ export default function Simulator() {
   )
 }
 
-function SimStat({ label, value, mono, accent }) {
+function SimStat({ label, value, mono, accent, red }) {
+  const color = red ? 'var(--red)' : accent ? 'var(--accent)' : 'var(--fg)'
   return (
     <div style={{ padding: '14px 16px', background: 'var(--bg)', borderRight: '1px solid var(--hairline)' }}>
       <div className="mono" style={{ fontSize: 10, letterSpacing: '0.12em', color: 'var(--fg-muted)', textTransform: 'uppercase' }}>
         {label}
       </div>
-      <div className={mono ? 'mono' : 'display'} style={{ fontSize: 24, marginTop: 4, color: accent ? 'var(--accent)' : 'var(--fg)', fontWeight: 500 }}>
+      <div className={mono ? 'mono' : 'display'} style={{ fontSize: 24, marginTop: 4, color, fontWeight: 500 }}>
         {value}
       </div>
     </div>

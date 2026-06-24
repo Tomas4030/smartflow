@@ -4,7 +4,6 @@ import { Hero } from '../components/Hero'
 import { Intro, Problem, Solution, SOSFeature, TimeSaved, Market, Roadmap, Compare, Pricing, Team, Contact, Footer } from '../components/landing'
 import { SupportChat } from '../components/SupportChat'
 
-// Free scroll through the Hero (drives its animation), then snap section-to-section.
 function useScrollSnap() {
   useEffect(() => {
     let busy = false
@@ -15,7 +14,6 @@ function useScrollSnap() {
       setTimeout(() => { busy = false }, 650)
     }
 
-    // Snappable targets: every section after the Hero, plus the footer.
     const targets = () =>
       [...document.querySelectorAll('section:not(#top)'), document.querySelector('footer')]
         .filter(Boolean)
@@ -24,10 +22,8 @@ function useScrollSnap() {
     const handle = (dir, e) => {
       const hero = document.getElementById('top')
       if (!hero) return
-      // Point where the Hero animation finishes (p = 1, sticky scene fully played).
       const freeEnd = hero.offsetHeight - window.innerHeight
 
-      // Still inside the Hero animation → let native scroll drive it.
       if (window.scrollY < freeEnd - 4) return
 
       e.preventDefault()
@@ -43,7 +39,6 @@ function useScrollSnap() {
         if (prev != null) {
           go(prev)
         } else {
-          // Above the first section → drop back into the Hero's free-scroll zone.
           go(Math.max(0, freeEnd - Math.round(window.innerHeight * 0.5)))
         }
       }
@@ -82,8 +77,8 @@ export default function App() {
       <Compare />
       <Roadmap />
       <Pricing />
-      <SOSFeature />
       <Team />
+      <SOSFeature />
       <Contact />
       <Footer />
       <SupportChat />

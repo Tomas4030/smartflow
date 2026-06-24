@@ -65,6 +65,22 @@ See [docs/architecture.md](docs/architecture.md) for detailed diagrams and data-
 
 ---
 
+## Current Limitations & Roadmap
+
+SmartFlow is an academic MVP. The web platform — authentication, the municipality and super-admin dashboards, event history, the citizen SOS flow, and the map simulator — is functional end to end. The following pieces are **not yet built** and are where the project would go next:
+
+| Area | Current state | Next step |
+|------|---------------|-----------|
+| Camera detection | Out of scope. Detection events are created manually from the dashboard or through the citizen SOS flow | Integrate a real computer-vision pipeline that recognises emergency vehicles from a camera feed |
+| Traffic-light control | Intersection state changes are recorded in the database only | Wire the controller to physical traffic-signal hardware |
+| Emergency dispatch | The SOS flow is simulated — it does **not** contact 112 or real emergency services | Integrate with an official dispatch/112 system |
+| Live updates | The dashboard refreshes by polling every 5 seconds | Push real-time updates over WebSockets |
+| AI support chat | Requires `NVIDIA_API_KEY`; without it, the chat falls back to keyword matching | Ship a configured key or self-hosted model |
+| Map simulator | Depends on the public OSRM routing and OpenStreetMap/Overpass services (no API key, rate-limited); falls back to straight-line routes and evenly-spaced lights when unreachable | Use a self-hosted/keyed routing and traffic-signal source |
+| Citizen app | Responsive web only | Native mobile app for the SOS flow |
+
+---
+
 ## Documentation
 
 | Document | Contents |

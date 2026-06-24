@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useT, useScrollProgress, clamp } from "../shared";
 
@@ -842,56 +842,9 @@ function RoadScene({ scrollP, detectionActive, step }) {
   );
 }
 
-function StepCaption({ step, lang }) {
-  const captions =
-    lang === "en"
-      ? [
-          null,
-          {
-            eyebrow: "STEP 01 — THE PROBLEM",
-            title: "An ambulance hits red lights.",
-            body: "Every red light costs precious seconds — sometimes lives.",
-          },
-          {
-            eyebrow: "STEP 02 — DETECTION",
-            title: "The AI camera sees it coming.",
-            body: "Sirens, lights, vehicle silhouette — recognised in real time.",
-          },
-          {
-            eyebrow: "STEP 03 — ACTIVATION",
-            title: "Lights flip green ahead.",
-            body: "The intersection opens the ambulance's axis just before arrival.",
-          },
-          {
-            eyebrow: "STEP 04 — FREE PASSAGE",
-            title: "Time recovered. Lives saved.",
-            body: "5–7 minutes to the scene. 10–15 to the hospital.",
-          },
-        ]
-      : [
-          null,
-          {
-            eyebrow: "PASSO 01 — O PROBLEMA",
-            title: "A ambulância encontra vermelhos.",
-            body: "Cada semáforo custa segundos preciosos — às vezes vidas.",
-          },
-          {
-            eyebrow: "PASSO 02 — DETEÇÃO",
-            title: "A câmara IA vê-a chegar.",
-            body: "Sirene, luzes, silhueta — reconhecidas em tempo real.",
-          },
-          {
-            eyebrow: "PASSO 03 — ATIVAÇÃO",
-            title: "Os semáforos abrem à frente.",
-            body: "O cruzamento abre o eixo da ambulância antes da sua chegada.",
-          },
-          {
-            eyebrow: "PASSO 04 — PASSAGEM LIVRE",
-            title: "Tempo recuperado. Vidas salvas.",
-            body: "5–7 minutos até ao acidente. 10–15 até ao hospital.",
-          },
-        ];
-  const c = captions[step];
+function StepCaption({ step }) {
+  const [t] = useT();
+  const c = t.hero.steps[step - 1];
   if (!c) return null;
   return (
     <div
@@ -1007,125 +960,9 @@ function ProgressDots({ step }) {
 }
 
 export function Hero() {
-  const [t, lang] = useT();
+  const [t] = useT();
   const wrapRef = useRef(null);
-  const canvasRef = useRef(null);
   const p = useScrollProgress(wrapRef, { start: 0, end: 1 });
-
-  // Particle constellation — runs once, fades with titleP opacity
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    let animId;
-    let particles = [];
-    const mouse = { x: null, y: null, radius: 180 };
-
-    class Particle {
-      constructor(x, y, vx, vy, size) {
-        this.x = x;
-        this.y = y;
-        this.vx = vx;
-        this.vy = vy;
-        this.size = size;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(167, 139, 250, 0.75)";
-        ctx.fill();
-      }
-      update() {
-        if (this.x > canvas.width || this.x < 0) this.vx = -this.vx;
-        if (this.y > canvas.height || this.y < 0) this.vy = -this.vy;
-        if (mouse.x !== null) {
-          const dx = mouse.x - this.x,
-            dy = mouse.y - this.y;
-          const d = Math.hypot(dx, dy);
-          if (d < mouse.radius && d > 0) {
-            const f = (mouse.radius - d) / mouse.radius;
-            this.x -= (dx / d) * f * 5;
-            this.y -= (dy / d) * f * 5;
-          }
-        }
-        this.x += this.vx;
-        this.y += this.vy;
-        this.draw();
-      }
-    }
-
-    const init = () => {
-      particles = [];
-      const n = (canvas.width * canvas.height) / 9000;
-      for (let i = 0; i < n; i++) {
-        const s = Math.random() * 1.5 + 0.5;
-        particles.push(
-          new Particle(
-            Math.random() * canvas.width,
-            Math.random() * canvas.height,
-            (Math.random() - 0.5) * 0.4,
-            (Math.random() - 0.5) * 0.4,
-            s,
-          ),
-        );
-      }
-    };
-
-    const connect = () => {
-      const maxDist = (canvas.width / 7) * (canvas.height / 7);
-      for (let a = 0; a < particles.length; a++) {
-        for (let b = a + 1; b < particles.length; b++) {
-          const dx = particles[a].x - particles[b].x;
-          const dy = particles[a].y - particles[b].y;
-          const dist2 = dx * dx + dy * dy;
-          if (dist2 < maxDist) {
-            const opacity = (1 - dist2 / maxDist) * 0.45;
-            ctx.strokeStyle = `rgba(167, 139, 250, ${opacity})`;
-            ctx.lineWidth = 0.8;
-            ctx.beginPath();
-            ctx.moveTo(particles[a].x, particles[a].y);
-            ctx.lineTo(particles[b].x, particles[b].y);
-            ctx.stroke();
-          }
-        }
-      }
-    };
-
-    const animate = () => {
-      animId = requestAnimationFrame(animate);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((pt) => pt.update());
-      connect();
-    };
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth || window.innerWidth;
-      canvas.height = canvas.offsetHeight || window.innerHeight;
-      init();
-    };
-
-    const onMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
-    const onOut = () => {
-      mouse.x = null;
-      mouse.y = null;
-    };
-
-    window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseout", onOut);
-    resize();
-    animate();
-
-    return () => {
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseout", onOut);
-      cancelAnimationFrame(animId);
-    };
-  }, []);
 
   const titleP = clamp((0.16 - p) / 0.16, 0, 1);
   const sceneIn = clamp((p - 0.05) / 0.18, 0, 1);
@@ -1152,14 +989,30 @@ export function Hero() {
             "radial-gradient(ellipse at 50% 30%, color-mix(in oklch, var(--accent-soft) 28%, var(--bg)) 0%, var(--bg) 65%)",
         }}
       >
-        <canvas
-          ref={canvasRef}
+        <video
           aria-hidden
+          autoPlay
+          muted
+          loop
+          playsInline
           style={{
             position: "absolute",
             inset: 0,
             width: "100%",
             height: "100%",
+            objectFit: "cover",
+            opacity: titleP,
+            pointerEvents: "none",
+          }}
+        >
+          <source src="/video.mp4" type="video/mp4" />
+        </video>
+        <div
+          aria-hidden
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
             opacity: titleP,
             pointerEvents: "none",
           }}
@@ -1246,7 +1099,7 @@ export function Hero() {
             step={step}
           />
         </div>
-        {step >= 1 && <StepCaption step={step} lang={lang} />}
+        {step >= 1 && <StepCaption step={step} />}
         {step >= 1 && <ProgressDots step={step} />}
         <div
           aria-hidden

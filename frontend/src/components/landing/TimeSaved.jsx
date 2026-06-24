@@ -347,7 +347,6 @@ function TimeSavedBanner({ pt, visible }) {
   );
 }
 
-// Kept for any legacy imports
 export function RaceTrack({ label, time, color, progress, highlight }) {
   return (
     <div

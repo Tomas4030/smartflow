@@ -197,7 +197,7 @@ export default function AdminLoginPage() {
         >
           <div
             className="container"
-            style={{ display: "flex", alignItems: "center", gap: 10 }}
+            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10 }}
           >
             <Logomark size={22} />
             <span

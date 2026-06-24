@@ -214,7 +214,6 @@ export default function ClientProfile() {
           const lat = parseFloat(data[0].lat);
           const lng = parseFloat(data[0].lon);
           handleChange("lat", lat);
-          // Need to set lng separately since handleChange only sets one at a time
           setForm((f) => ({ ...f, lat, lng }));
           setSaved(false);
           return;

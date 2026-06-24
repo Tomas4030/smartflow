@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AUTH } from "../auth.js";
 
 export default function AdminHistory() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const seqRef = useRef(0);
   const headers = AUTH.authHeaders();
 
   useEffect(() => {
@@ -13,6 +14,28 @@ export default function AdminHistory() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    const interval = setInterval(() => {
+      setEvents((prev) => {
+        if (prev.length < 2) return prev;
+        const recycled = prev[prev.length - 1];
+        seqRef.current += 1;
+        const resolved = Math.random() > 0.4;
+        const fresh = {
+          ...recycled,
+          id: `sim_${seqRef.current}`,
+          detectedAt: new Date().toISOString(),
+          triggeredBy: Math.random() > 0.5 ? "camera" : "manual",
+          greenDurationS: 18 + Math.floor(Math.random() * 42),
+          resolvedAt: resolved ? new Date().toISOString() : null,
+        };
+        return [fresh, ...prev.slice(0, prev.length - 1)];
+      });
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [loading]);
 
   if (loading) return <div style={{ padding: 60, textAlign: "center", color: "var(--fg-muted)" }} className="mono">A carregar...</div>;
 
@@ -40,7 +63,7 @@ export default function AdminHistory() {
             </thead>
             <tbody>
               {events.map((ev) => (
-                <tr key={ev.id} style={{ borderBottom: "1px solid var(--hairline)" }}>
+                <tr key={ev.id} className="sf-hist-row" style={{ borderBottom: "1px solid var(--hairline)" }}>
                   <td style={tdSty}><span style={{ fontWeight: 500 }}>{ev.intersection?.name}</span></td>
                   <td style={tdSty}>{ev.intersection?.municipality?.name}</td>
                   <td style={tdSty}>
@@ -63,6 +86,13 @@ export default function AdminHistory() {
           </table>
         </div>
       )}
+      <style>{`
+        @keyframes sf-hist-in {
+          0%   { background: color-mix(in oklch, var(--accent) 20%, transparent); opacity: 0; transform: translateY(-8px); }
+          100% { background: transparent; opacity: 1; transform: none; }
+        }
+        .sf-hist-row { animation: sf-hist-in 0.7s ease both; }
+      `}</style>
     </div>
   );
 }

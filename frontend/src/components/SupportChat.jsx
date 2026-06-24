@@ -165,7 +165,6 @@ export function SupportChat() {
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
-  // Chip clicks → instant keyword answer (no API call needed)
   const pushKeyword = useCallback(
     (topicId) => {
       const ans = S.answers[topicId] || S.answers.fallback;
@@ -185,7 +184,6 @@ export function SupportChat() {
     [S, open],
   );
 
-  // Free-text → AI, falls back to keyword matching on error
   const pushAI = useCallback(
     async (userText) => {
       setTyping(true);
@@ -206,7 +204,6 @@ export function SupportChat() {
         setMessages((m) => [...m, msg]);
         setUnread((u) => (open ? u : true));
       } catch (_) {
-        // API unavailable — fall back to keyword matching
         setTyping(false);
         pushKeyword(resolveTopic(userText));
       }

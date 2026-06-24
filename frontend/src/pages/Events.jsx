@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { AUTH } from "../auth.js";
 
 const PAGE_SIZE = 10;
@@ -78,6 +78,8 @@ export function EventsPage({ limit, embedded } = {}) {
   const [allIntersections, setAllIntersections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [newId, setNewId] = useState(null);
+  const seqRef = useRef(0);
 
   const [fInt, setFInt] = useState("");
   const [fFrom, setFFrom] = useState("");
@@ -124,6 +126,30 @@ export function EventsPage({ limit, embedded } = {}) {
   }
   const hasFilter = fInt || fFrom || fTo || fStatus;
 
+  useEffect(() => {
+    if (loading || hasFilter || events.length < 2) return;
+    const interval = setInterval(() => {
+      seqRef.current += 1;
+      const id = `sim_${seqRef.current}`;
+      setNewId(id);
+      setEvents((prev) => {
+        if (prev.length < 2) return prev;
+        const recycled = prev[prev.length - 1];
+        const active = Math.random() > 0.6;
+        const fresh = {
+          ...recycled,
+          id,
+          detectedAt: new Date().toISOString(),
+          resolvedAt: active ? null : new Date().toISOString(),
+          status: active ? "active" : "resolved",
+          greenDurationS: 18 + Math.floor(Math.random() * 42),
+        };
+        return [fresh, ...prev.slice(0, prev.length - 1)];
+      });
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [loading, hasFilter, events.length]);
+
   if (embedded) {
     const limitedEvents = events.slice(0, limit || 5);
     return (
@@ -134,6 +160,11 @@ export function EventsPage({ limit, embedded } = {}) {
             0%,100%{box-shadow:0 0 0 0 color-mix(in oklch, var(--red) 55%, transparent)}
             50%{box-shadow:0 0 0 5px color-mix(in oklch, var(--red) 0%, transparent)}
           }
+          @keyframes sf-ev-rowin {
+            0%{background:color-mix(in oklch,var(--accent) 22%,transparent);opacity:.4;transform:translateY(-7px)}
+            100%{background:transparent;opacity:1;transform:none}
+          }
+          .sf-ev-new { animation: sf-ev-rowin .8s ease both; }
           .sf-ev-tr:hover td { background: color-mix(in oklch, var(--surface) 45%, transparent) !important; }
         `}</style>
         <div style={{ overflowX: "auto" }}>
@@ -158,7 +189,7 @@ export function EventsPage({ limit, embedded } = {}) {
                   </td>
                 </tr>
               ) : limitedEvents.map((ev, idx) => (
-                <tr key={ev.id} className="sf-ev-tr" style={{ borderBottom: idx < limitedEvents.length - 1 ? "1px solid var(--hairline)" : "none" }}>
+                <tr key={ev.id} className={`sf-ev-tr ${ev.id === newId ? "sf-ev-new" : ""}`} style={{ borderBottom: idx < limitedEvents.length - 1 ? "1px solid var(--hairline)" : "none" }}>
                   <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)" }}>{ev.intersectionId}</td>
                   <td style={{ padding: "13px 16px", fontSize: 13.5, color: "var(--fg)", maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {ev.intersection?.name || "Cruzamento"}
@@ -191,6 +222,11 @@ export function EventsPage({ limit, embedded } = {}) {
           0%,100%{box-shadow:0 0 0 0 color-mix(in oklch, var(--red) 55%, transparent)}
           50%{box-shadow:0 0 0 5px color-mix(in oklch, var(--red) 0%, transparent)}
         }
+        @keyframes sf-ev-rowin {
+          0%{background:color-mix(in oklch,var(--accent) 22%,transparent);opacity:.4;transform:translateY(-7px)}
+          100%{background:transparent;opacity:1;transform:none}
+        }
+        .sf-ev-new { animation: sf-ev-rowin .8s ease both; }
         .sf-ev-tr:hover td { background: color-mix(in oklch, var(--surface) 45%, transparent) !important; }
         .sf-ev-input:focus { border-color: var(--accent) !important; }
         .sf-ev-status-pill {
@@ -302,7 +338,7 @@ export function EventsPage({ limit, embedded } = {}) {
                       </td>
                     </tr>
                   ) : pageEvents.map((ev, idx) => (
-                    <tr key={ev.id} className="sf-ev-tr" style={{ borderBottom: idx < pageEvents.length - 1 ? "1px solid var(--hairline)" : "none" }}>
+                    <tr key={ev.id} className={`sf-ev-tr ${ev.id === newId ? "sf-ev-new" : ""}`} style={{ borderBottom: idx < pageEvents.length - 1 ? "1px solid var(--hairline)" : "none" }}>
                       <td style={{ padding: "13px 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--fg-muted)" }}>{ev.intersectionId}</td>
                       <td style={{ padding: "13px 16px", fontSize: 13.5, color: "var(--fg)", maxWidth: 240, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {ev.intersection?.name || "Cruzamento"}
