@@ -558,9 +558,28 @@ export function SystemDiagram() {
           fill="none"
           opacity="0.6"
         />
+        {/* Câmara -> Ambulância */}
+        <path
+          d="M 65 146 L 148 298"
+          stroke="var(--accent)"
+          strokeWidth="1.4"
+          fill="none"
+          markerEnd="url(#arrow)"
+          strokeDasharray="3 6"
+          strokeLinecap="round"
+          opacity="0.55"
+        >
+          <animate
+            attributeName="stroke-dashoffset"
+            from="0"
+            to="-20"
+            dur="1.4s"
+            repeatCount="indefinite"
+          />
+        </path>
         {/* Ambulância -> Câmara */}
         <path
-          d="M 178 304 Q 118 235 96 146"
+          d="M 168 304 Q 110 230 96 146"
           stroke="var(--cyan)"
           strokeWidth="1.4"
           fill="none"

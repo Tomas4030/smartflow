@@ -1,7 +1,11 @@
-.PHONY: all dev setup stop prod seed reset logs test
+.PHONY: all clean dev setup stop prod seed reset logs test
 
 # Default target
-all: setup dev
+all: clean setup dev
+
+clean:
+	docker compose down --remove-orphans
+	docker builder prune -f
 
 # ══════════════════════════════════════════════════════════════
 #  SmartFlow — Makefile
@@ -48,7 +52,7 @@ dev:
 setup:
 	cd frontend && npm install
 	cd backend && npm install
-	docker compose up -d db
+	docker compose up --build -d db backend
 	docker compose exec backend npx prisma migrate deploy
 	docker compose exec backend npm run seed
 	@echo ""

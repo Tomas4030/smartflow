@@ -64,7 +64,7 @@ export const SF_I18N = {
       cards: [
         { v: "Sem GPS nem apps", l: "A deteção é feita por visão computacional no próprio cruzamento. Não depende da localização enviada pelos veículos.", k: "01" },
         { v: "Implementação simples", l: "Instala-se apenas nos cruzamentos definidos pelo município e fica operacional rapidamente, sem integrações complexas.", k: "02" },
-        { v: "Piloto no terreno", l: "Projeto-piloto em Albufeira, com validação conjunta com a Proteção Civil e foco numa aplicação real.", k: "03" },
+        { v: "Mais barato que a concorrência", l: "Custa menos do que soluções como o Life Route, sem sacrificar eficácia nem fiabilidade.", k: "03" },
       ],
     },
     roadmap: {
@@ -83,8 +83,8 @@ export const SF_I18N = {
     },
     compare: {
       eyebrow: "COMPARAÇÃO",
-      title: "Smart Flow vs. Soluções Tradicionais",
-      a_name: "Solução Tradicional",
+      title: "Smart Flow vs. Life Route",
+      a_name: "Life Route",
       a_pts: [
         { t: "Depende de GPS ou app", d: "Precisa que o veículo comunique a sua localização." },
         { t: "Menos precisão no cruzamento", d: "A posição pode atrasar, falhar ou ser imprecisa." },
@@ -122,8 +122,8 @@ export const SF_I18N = {
       eyebrow: "EQUIPA",
       title: "A nossa missão.",
       members: [
-        { n: "Tomás Miguel", r: "Negócio & Marca" },
-        { n: "Lucas Cleminson", r: "Engenharia & Software" },
+        { n: "Tomás Miguel", r: "Full Stack" },
+        { n: "Lucas Cleminson", r: "Full Stack" },
       ],
     },
     contact: {
@@ -260,7 +260,7 @@ export const SF_I18N = {
       cards: [
         { v: "No GPS, No Apps", l: "Detection runs on computer vision at the intersection itself. No location signal from the vehicle required.", k: "01" },
         { v: "Simple to Deploy", l: "Installed only at the intersections your municipality selects. Up and running fast, no complex integrations.", k: "02" },
-        { v: "Tested in the Field", l: "Live pilot in Albufeira, developed alongside Civil Protection for real emergency use.", k: "03" },
+        { v: "Cheaper than alternatives", l: "Costs less than solutions like Life Route without sacrificing effectiveness or reliability.", k: "03" },
       ],
     },
     roadmap: {
@@ -279,8 +279,8 @@ export const SF_I18N = {
     },
     compare: {
       eyebrow: "COMPARISON",
-      title: "Smart Flow vs. Traditional Systems",
-      a_name: "Traditional System",
+      title: "Smart Flow vs. Life Route",
+      a_name: "Life Route",
       a_pts: [
         { t: "Relies on GPS or an app", d: "The vehicle has to broadcast its own position to trigger anything." },
         { t: "Imprecise at intersections", d: "Signals can lag, fail, or be off, especially in heavy traffic." },
@@ -318,8 +318,8 @@ export const SF_I18N = {
       eyebrow: "TEAM",
       title: "Behind the mission.",
       members: [
-        { n: "Tomás Miguel", r: "Business & Brand" },
-        { n: "Lucas Cleminson", r: "Engineering & Software" },
+        { n: "Tomás Miguel", r: "Full Stack" },
+        { n: "Lucas Cleminson", r: "Full Stack" },
       ],
     },
     contact: {

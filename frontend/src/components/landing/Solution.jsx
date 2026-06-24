@@ -350,9 +350,30 @@ export function SystemDiagram() {
           markerEnd="url(#sf-arrow-cyan)"
         />
 
+        {/* Câmara → Ambulância */}
+        <path
+          d="M75 146 L148 296"
+          stroke="var(--accent)"
+          strokeWidth="1.2"
+          strokeDasharray="3 6"
+          strokeLinecap="round"
+          fill="none"
+          opacity="0.55"
+          markerEnd="url(#sf-arrow-accent)"
+        >
+          <animate
+            className="sf-diagram-motion"
+            attributeName="stroke-dashoffset"
+            from="0"
+            to="-18"
+            dur="1.6s"
+            repeatCount="indefinite"
+          />
+        </path>
+
         {/* Ambulância → Câmara (sinal de deteção) */}
         <path
-          d="M168 296 C148 260 118 200 98 146"
+          d="M158 296 C140 240 120 180 100 146"
           stroke="var(--cyan)"
           strokeWidth="1.2"
           strokeDasharray="3 6"
