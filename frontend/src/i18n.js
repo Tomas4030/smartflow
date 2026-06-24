@@ -32,7 +32,7 @@ export const SF_I18N = {
         { v: "1.4M", l: "Acionamentos anuais" },
         { v: "3 min", l: "Resposta ao envio" },
         { v: "15 min", l: "Perdidos no transporte" },
-        { v: "−7%", l: "Sobrevivência / 3 min" },
+        { v: "−7%", l: "Sobrevivência / 1 min" },
       ],
     },
     solution: {

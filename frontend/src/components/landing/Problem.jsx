@@ -99,7 +99,7 @@ export function Problem() {
               }}
             >
               Em emergências, cada minuto perdido no trânsito reduz a margem de
-              resposta. O problema não é só chegar ao destino — é chegar a
+              resposta. O problema não é só chegar ao destino, é chegar a
               tempo.
             </p>
           </div>
@@ -224,7 +224,7 @@ export function Problem() {
                       {i === 2 &&
                         "Tempo perdido no transporte até ao hospital."}
                       {i === 3 &&
-                        "Redução da hipótese de sobreviver a cada 3 minutos."}
+                        "Redução da hipótese de sobreviver a cada 1 minuto."}
                     </p>
                   </div>
                 </article>
