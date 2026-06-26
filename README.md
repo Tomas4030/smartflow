@@ -122,7 +122,7 @@ The app will be available at **http://localhost**.
 
 | Command | What it does |
 |---------|-------------|
-| `make start` | Full start: install deps, build containers, migrate, seed, open at http://localhost |
+| `make all` | Full start: install deps, build containers, migrate, seed, open at http://localhost |
 | `make dev` | Dev mode: Docker for DB + backend, Vite dev server with hot reload on :5173 |
 | `make stop` | Stop all containers |
 | `make seed` | Re-run the seed script inside the running backend container |
